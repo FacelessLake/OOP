@@ -2,88 +2,39 @@ package ru.nsu.belozerov;
 
 public class HeapSort {
 
-    private static int[] heap;
-    private static int[] arr;
-    private static int size;
-    private static int index = 0;
+    public static void sort(int[] arr) {
+        int n = arr.length;
 
-    public HeapSort(int[] array, int sz){
-        size = sz;
-        arr = new int[size];
-        arr = array;
-        heap = new int[size];
-    }
+        for (int i = n / 2 - 1; i >= 0; i--)
+            heapify(arr, n, i);
 
-    public int getElement(int index){
-        return arr[index];
-    }
+        for (int i = n - 1; i > 0; i--) {
 
-    private void Swap(int a, int b){
-        int temp = heap[a];
-        heap[a] = heap[b];
-        heap[b]=temp;
-    }
+            int temp = arr[0];
+            arr[0] = arr[i];
+            arr[i] = temp;
 
-    private void Add(int i){
-        int left = 2*index+1;
-        int right = 2*index+2;
-
-        if (heap[left] == 0){
-            heap[left]=arr[i];
-            SiftUp(left);
-        }
-        else {
-            heap[right]=arr[i];
-            SiftUp(right);
-            index++;
+            heapify(arr, i, 0);
         }
     }
 
-    private void SiftUp(int i){
-        if (heap[i] < heap[(i-1)/2]) {
-            Swap(i,(i-1)/2);
-            SiftUp((i-1)/2);
-        }
-    }
+    static void heapify(int[] arr, int n, int i) {
+        int largest = i;
+        int l = 2 * i + 1;
+        int r = 2 * i + 2;
 
-    private void SiftDown(int i){
-        int left = 2*i+1;
-        int right = 2*i+2;
+        if (l < n && arr[l] > arr[largest])
+            largest = l;
 
-        if (left>size){
-            return;
-        }
+        if (r < n && arr[r] > arr[largest])
+            largest = r;
 
-        if (heap[left] < heap[right] | right>size){
-            if(heap[left] < heap[i]){
-                Swap(i, left);
-                SiftDown(left);
-            }
-        }
-        else {
-            if (right>size){
-                return;
-            }
-            if(heap[right] < heap[i]){
-                Swap(i, right);
-                SiftDown(right);
-            }
-        }
-    }
+        if (largest != i) {
+            int swap = arr[i];
+            arr[i] = arr[largest];
+            arr[largest] = swap;
 
-    public void Sort(){
-
-        heap[index] = arr[0];
-
-        for(int i=1;i<size;i++){
-            Add(i);
-        }
-        int end = --size;
-        while (size >= 0){
-            Swap(0,size);
-            arr[end-size]=heap[size];
-            size--;
-            SiftDown(0);
+            heapify(arr, n, largest);
         }
     }
 }
