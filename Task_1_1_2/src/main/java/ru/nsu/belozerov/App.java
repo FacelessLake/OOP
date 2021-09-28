@@ -21,15 +21,13 @@ public class App {
             FileReader input1 = new FileReader(filename);
             input1.read(str);
             input1.close();
-        }
-
-        catch(Exception e) {
+        } catch (Exception e) {
             e.getStackTrace();
         }
 
         char[] str2 = in.nextLine().toCharArray();
 
         FindSubstring fs = new FindSubstring();
-        fs.find(str2,str);
+        fs.find(str2, str);
     }
 }
