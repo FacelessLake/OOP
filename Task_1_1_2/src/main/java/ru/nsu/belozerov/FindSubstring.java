@@ -39,7 +39,7 @@ public class FindSubstring {
         int[] result = zFunction(str, len1 + len2 + 1);
 
         for (int i=0; i < len1 + len2 + 1; i++) {
-            if (result[i] != 0){
+            if (result[i] == len1){
                 System.out.print(i-len1-1+" ");
             }
         }
