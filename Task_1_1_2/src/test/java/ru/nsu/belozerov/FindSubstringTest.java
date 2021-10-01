@@ -17,7 +17,7 @@ class FindSubstringTest {
         ArrayList<Integer> answ = new ArrayList<>(0);
         do {
             index = input.indexOf(pattern, index);
-            if (index == -1) {
+            if (index == -1){
                 break;
             }
             answ.add(index);
@@ -39,7 +39,24 @@ class FindSubstringTest {
         String pattern = "em";
 
 
-        Assertions.assertEquals(fst.referenceFind(input1, pattern), fs.find(input2, pattern.toCharArray()));
+        Assertions.assertEquals(fst.referenceFind(input1, pattern),fs.find(input2, pattern.toCharArray()));
+
+        input2.close();
+    }
+
+    @Test
+    void test_FindInLargeTextAnotherEncoding() throws IOException {
+
+        FindSubstring fs = new FindSubstring();
+        FindSubstringTest fst = new FindSubstringTest();
+
+        String input1 = Files.readString(Paths.get("hamlet.txt"));
+
+        Reader input2 = new FileReader("hamlet.txt");
+        String pattern = "Hamlet";
+
+
+        Assertions.assertEquals(fst.referenceFind(input1, pattern),fs.find(input2, pattern.toCharArray()));
 
         input2.close();
     }
