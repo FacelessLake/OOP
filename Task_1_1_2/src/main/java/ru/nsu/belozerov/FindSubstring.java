@@ -1,6 +1,8 @@
 package ru.nsu.belozerov;
 
 import java.io.Reader;
+import java.util.Arrays;
+
 public class FindSubstring {
 
     private int[] zFunction(char[] str, int strlen) {
@@ -67,6 +69,7 @@ public class FindSubstring {
                 System.arraycopy(str, shift, str, patternlen + 1, strlen - shift);
 
                 //get next part, then check block joint
+                Arrays.fill(buf, '\0');
                 cnt = input.read(buf);
                 if (cnt == -1) {
                     break;
@@ -78,6 +81,9 @@ public class FindSubstring {
 
                 for (int i = patternlen + 1; i < strlen; i++) {
                     if (result[i] == patternlen) {
+                        if (iter * buflen + i + lastIndex + 1 == 3049){
+                            int a = 1;
+                        }
                         System.out.print(iter * buflen + i + lastIndex + 1 + " ");
                     }
                 }

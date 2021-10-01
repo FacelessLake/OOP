@@ -1,6 +1,5 @@
 package ru.nsu.belozerov;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.Reader;
@@ -11,7 +10,6 @@ public class App {
         Scanner in = new Scanner(System.in);
 
         String filename = in.nextLine();
-        File file = new File(filename);
         char[] pattern = in.nextLine().toCharArray();
 
         try {
