@@ -58,9 +58,6 @@ public class FindSubstring {
                 for (int i = patternlen + 1; i < strlen; i++) {
                     if (result[i] == patternlen) {
                         lastIndex = i - (patternlen + 1);
-                        if (iter * buflen + lastIndex > 747) {
-                            int a = 0;
-                        }
                         answer.add(iter * buflen + lastIndex);
                     }
                 }
@@ -81,12 +78,8 @@ public class FindSubstring {
                 System.arraycopy(buf, 0, str, strlen - (lastIndex + patternlen), (lastIndex + patternlen));
                 result = zFunction(str, strlen);
 
-                for (int i = patternlen + 1; i < strlen-(lastIndex + patternlen); i++) {
+                for (int i = patternlen + 1; i < strlen - (lastIndex + patternlen); i++) {
                     if (result[i] == patternlen) {
-                        //lastIndex = i - (patternlen + 1);
-                        if (iter * buflen + i + lastIndex + 1 - patternlen > 747) {
-                            int a = 0;
-                        }
                         answer.add(iter * buflen + i + lastIndex - 1);
                     }
                 }

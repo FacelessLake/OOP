@@ -17,7 +17,7 @@ class FindSubstringTest {
         ArrayList<Integer> answ = new ArrayList<>(0);
         do {
             index = input.indexOf(pattern, index);
-            if (index == -1){
+            if (index == -1) {
                 break;
             }
             answ.add(index);
@@ -39,7 +39,7 @@ class FindSubstringTest {
         String pattern = "em";
 
 
-        Assertions.assertEquals(fst.referenceFind(input1, pattern),fs.find(input2, pattern.toCharArray()));
+        Assertions.assertEquals(fst.referenceFind(input1, pattern), fs.find(input2, pattern.toCharArray()));
 
         input2.close();
     }
@@ -56,7 +56,7 @@ class FindSubstringTest {
         String pattern = "Hamlet";
 
 
-        Assertions.assertEquals(fst.referenceFind(input1, pattern),fs.find(input2, pattern.toCharArray()));
+        Assertions.assertEquals(fst.referenceFind(input1, pattern), fs.find(input2, pattern.toCharArray()));
 
         input2.close();
     }
