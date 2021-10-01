@@ -1,12 +1,9 @@
 package ru.nsu.belozerov;
 
+import java.io.Reader;
+import java.util.Scanner;
+
 public class FindSubstring {
-//    private int strlen;
-//    private int[] arr = new int[strlen];
-//
-//    public FindSubstring(String[] str) {
-//        strlen = str.length;
-//    }
 
     private int[] zFunction(char[] str, int strlen) {
         int[] arr = new int[strlen];
@@ -27,12 +24,13 @@ public class FindSubstring {
         return (arr);
     }
 
-    public void find(char[] substr, char[] buf) {
-        int len1 = substr.length;
+    private void finder(char[] pattern, char[] buf) {
+
+        int len1 = pattern.length;
         int len2 = buf.length;
 
         char[] str = new char[len1 + len2 + 1];
-        System.arraycopy(substr, 0, str, 0, len1);
+        System.arraycopy(pattern, 0, str, 0, len1);
         str[len1] = '~';
         System.arraycopy(buf, 0, str, len1 + 1, len2);
 
@@ -42,6 +40,30 @@ public class FindSubstring {
             if (result[i] == len1) {
                 System.out.print(i - len1 - 1 + " ");
             }
+        }
+    }
+
+    public static void find(Reader input) {
+        Scanner in = new Scanner(System.in);
+
+        char[] pattern = in.nextLine().toCharArray();
+        char[] buf = new char[pattern.length * 11];
+
+        try {
+            int cnt = 0;
+
+            while (true) {
+                cnt = input.read(buf);
+                if (cnt == -1) {
+                    break;
+                }
+                FindSubstring fs = new FindSubstring();
+                fs.finder(pattern, buf);
+            }
+            input.close();
+
+        } catch (Exception e) {
+            e.getStackTrace();
         }
     }
 }
