@@ -1,8 +1,6 @@
 package ru.nsu.belozerov;
 
 import java.io.Reader;
-import java.util.Scanner;
-
 public class FindSubstring {
 
     private int[] zFunction(char[] str, int strlen) {
@@ -26,39 +24,65 @@ public class FindSubstring {
 
     private void finder(char[] pattern, char[] buf) {
 
-        int len1 = pattern.length;
-        int len2 = buf.length;
-
-        char[] str = new char[len1 + len2 + 1];
-        System.arraycopy(pattern, 0, str, 0, len1);
-        str[len1] = '~';
-        System.arraycopy(buf, 0, str, len1 + 1, len2);
-
-        int[] result = zFunction(str, len1 + len2 + 1);
-
-        for (int i = 0; i < len1 + len2 + 1; i++) {
-            if (result[i] == len1) {
-                System.out.print(i - len1 - 1 + " ");
-            }
-        }
     }
 
-    public static void find(Reader input) {
-        Scanner in = new Scanner(System.in);
+    public void find(Reader input, char[] pattern) {
 
-        char[] pattern = in.nextLine().toCharArray();
-        char[] buf = new char[pattern.length * 11];
+        int patternlen = pattern.length;
+
+        int buflen = patternlen * 11;
+        char[] buf = new char[buflen];
+
+        int strlen = patternlen + buflen + 1;
+        char[] str = new char[strlen];
+
+        System.arraycopy(pattern, 0, str, 0, patternlen);
+        str[patternlen] = '~';
 
         try {
-            int cnt = 0;
-
+            int cnt;
+            int iter = 0;
             while (true) {
+                if (iter == 0) { // only for first time
+                    cnt = input.read(buf);
+                    if (cnt == -1) {
+                        break;
+                    }
+                }
+                //copy whole block
+                System.arraycopy(buf, 0, str, patternlen + 1, buflen);
+                int[] result = zFunction(str, strlen);
+
+                int lastIndex = 0;
+                for (int i = patternlen + 1; i < strlen; i++) {
+                    if (result[i] == patternlen) {
+                        lastIndex = i - (patternlen + 1);
+                        System.out.print(iter * buflen + lastIndex + " ");
+                    }
+                }
+
+                //left shift
+
+                int shift = lastIndex + 2 * patternlen + 1;
+                System.arraycopy(str, shift, str, patternlen + 1, strlen - shift);
+
+                //get next part, then check block joint
                 cnt = input.read(buf);
                 if (cnt == -1) {
                     break;
                 }
-                FindSubstring fs = new FindSubstring();
-                fs.finder(pattern, buf);
+
+                //feel the gap at the end
+                System.arraycopy(buf, 0, str, strlen - (lastIndex + patternlen), (lastIndex + patternlen));
+                result = zFunction(str, strlen);
+
+                for (int i = patternlen + 1; i < strlen; i++) {
+                    if (result[i] == patternlen) {
+                        System.out.print(iter * buflen + i + lastIndex + 1 + " ");
+                    }
+                }
+
+                iter++;
             }
             input.close();
 

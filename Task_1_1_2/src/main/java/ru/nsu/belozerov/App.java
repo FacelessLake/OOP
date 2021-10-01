@@ -12,11 +12,12 @@ public class App {
 
         String filename = in.nextLine();
         File file = new File(filename);
+        char[] pattern = in.nextLine().toCharArray();
 
         try {
             Reader input1 = new FileReader(filename);
             FindSubstring fs = new FindSubstring();
-            fs.find(input1);
+            fs.find(input1, pattern);
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
