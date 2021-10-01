@@ -2,6 +2,7 @@ package ru.nsu.belozerov;
 
 import java.io.Reader;
 import java.util.Arrays;
+import java.util.ArrayList;
 
 public class FindSubstring {
 
@@ -24,11 +25,7 @@ public class FindSubstring {
         return (arr);
     }
 
-    private void finder(char[] pattern, char[] buf) {
-
-    }
-
-    public void find(Reader input, char[] pattern) {
+    public ArrayList<Integer> find(Reader input, char[] pattern) {
 
         int patternlen = pattern.length;
 
@@ -37,6 +34,8 @@ public class FindSubstring {
 
         int strlen = patternlen + buflen + 1;
         char[] str = new char[strlen];
+
+        ArrayList<Integer> answer = new ArrayList<>(0);
 
         System.arraycopy(pattern, 0, str, 0, patternlen);
         str[patternlen] = '~';
@@ -59,7 +58,7 @@ public class FindSubstring {
                 for (int i = patternlen + 1; i < strlen; i++) {
                     if (result[i] == patternlen) {
                         lastIndex = i - (patternlen + 1);
-                        System.out.print(iter * buflen + lastIndex + " ");
+                        answer.add(iter * buflen + lastIndex);
                     }
                 }
 
@@ -81,10 +80,7 @@ public class FindSubstring {
 
                 for (int i = patternlen + 1; i < strlen; i++) {
                     if (result[i] == patternlen) {
-                        if (iter * buflen + i + lastIndex + 1 == 3049){
-                            int a = 1;
-                        }
-                        System.out.print(iter * buflen + i + lastIndex + 1 + " ");
+                        answer.add(iter * buflen + i + lastIndex - patternlen + 1);
                     }
                 }
 
@@ -95,5 +91,6 @@ public class FindSubstring {
         } catch (Exception e) {
             e.getStackTrace();
         }
+        return (answer);
     }
 }
