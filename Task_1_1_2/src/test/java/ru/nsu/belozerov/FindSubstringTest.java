@@ -74,4 +74,20 @@ class FindSubstringTest {
 
         input2.close();
     }
+
+    @Test
+    void test_FindWithOneSymbol() throws IOException {
+
+        FindSubstring fs = new FindSubstring();
+
+        String input1 = Files.readString(Paths.get("string.txt"));
+
+        Reader input2 = new FileReader("string.txt");
+        String pattern = "a";
+
+
+        Assertions.assertEquals(this.referenceFind(input1, pattern), fs.find(input2, pattern.toCharArray()));
+
+        input2.close();
+    }
 }

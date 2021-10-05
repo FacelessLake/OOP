@@ -47,7 +47,7 @@ public class FindSubstring {
                 if (shift == 0) {
                     cnt = input.read(str, patternLen + 1, patternLen * 13);
                     if (cnt < patternLen * 13) {
-                        N = cnt;
+                        N = patternLen + 1 + cnt;
                     }
                 } else {
                     //left shift
@@ -56,7 +56,7 @@ public class FindSubstring {
                     cnt = input.read(str, patternLen + 1 + strLen - shift, shift - patternLen - 1);
                     cnt += strLen - shift;
                     if (cnt < shift - patternLen - 1) {
-                        N = cnt;
+                        N = patternLen + 1 + cnt;
                     }
                 }
                 if (cnt == -1) {
