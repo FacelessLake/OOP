@@ -28,10 +28,9 @@ class FindSubstringTest {
     }
 
     @Test
-    void test_FindSmallFragment() throws IOException {
+    void test_FindSmallFragmentInTheEnd() throws IOException {
 
         FindSubstring fs = new FindSubstring();
-        FindSubstringTest fst = new FindSubstringTest();
 
         String input1 = Files.readString(Paths.get("input.txt"));
 
@@ -39,16 +38,15 @@ class FindSubstringTest {
         String pattern = "em";
 
 
-        Assertions.assertEquals(fst.referenceFind(input1, pattern), fs.find(input2, pattern.toCharArray()));
+        Assertions.assertEquals(this.referenceFind(input1, pattern), fs.find(input2, pattern.toCharArray()));
 
         input2.close();
     }
 
     @Test
-    void test_FindInLargeTextAnotherEncoding() throws IOException {
+    void test_FindInLargeText() throws IOException {
 
         FindSubstring fs = new FindSubstring();
-        FindSubstringTest fst = new FindSubstringTest();
 
         String input1 = Files.readString(Paths.get("hamlet.txt"));
 
@@ -56,7 +54,23 @@ class FindSubstringTest {
         String pattern = "Hamlet";
 
 
-        Assertions.assertEquals(fst.referenceFind(input1, pattern), fs.find(input2, pattern.toCharArray()));
+        Assertions.assertEquals(this.referenceFind(input1, pattern), fs.find(input2, pattern.toCharArray()));
+
+        input2.close();
+    }
+
+    @Test
+    void test_FindWithNoMatches() throws IOException {
+
+        FindSubstring fs = new FindSubstring();
+
+        String input1 = Files.readString(Paths.get("input.txt"));
+
+        Reader input2 = new FileReader("input.txt");
+        String pattern = "Hamlet";
+
+
+        Assertions.assertEquals(this.referenceFind(input1, pattern), fs.find(input2, pattern.toCharArray()));
 
         input2.close();
     }
