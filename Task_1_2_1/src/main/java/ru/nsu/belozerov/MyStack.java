@@ -1,46 +1,52 @@
 package ru.nsu.belozerov;
 
+import java.util.Arrays;
 import java.util.EmptyStackException;
 import java.util.Iterator;
 
 public class MyStack<T> implements Iterable<T> {
-    int size;
-    T[] arr;
+    private int cnt;
+    private T[] arr;
+    private int size;
 
-    public MyStack(T[] array) {
-        size = -1;
-        arr = array;
+    public MyStack() {
+        size = 0;
+        arr = (T[]) new Object[size];
+        cnt = 0;
     }
 
-    public T push(T item) {
-        size++;
-        arr[size] = item;
-        return item;
-    }
-
-    public T peek() {
-        if (size == -1)
-            throw new EmptyStackException();
-        return arr[size];
+    public void push(T item) {
+        arr = Arrays.copyOf(arr, ++size);
+        arr[cnt++] = item;
     }
 
     public T pop() {
-        T answ = peek();
-        size--;
-        return answ;
-    }
-
-    public boolean empty() {
-        return size == 0;
-    }
-
-    public int search(T obj) {
-        int answ = -1;
-        for (int i = 0; i < size; i++) {
-            if (arr[i] == obj)
-                answ = i;
+        if (cnt == 0) {
+            throw new EmptyStackException();
         }
-        return answ;
+        return arr[cnt--];
+    }
+
+    public int count() {
+        return cnt;
+    }
+
+    public void pushStack(MyStack<T> stack) {
+        int stackLen = stack.arr.length;
+        size += stackLen;
+        arr = Arrays.copyOf(arr, size);
+        System.arraycopy(stack.arr, 0, arr, cnt, stackLen);
+        cnt += stackLen;
+    }
+
+    public MyStack<T> popStack(int elemCnt) {
+        if (size < 0 || elemCnt > size) {
+            throw new IndexOutOfBoundsException();
+        }
+        MyStack<T> answStack = new MyStack<T>();
+        cnt -= elemCnt;
+        System.arraycopy(arr, cnt, answStack.arr, 0, elemCnt);
+        return (answStack);
     }
 
     @Override
@@ -48,13 +54,13 @@ public class MyStack<T> implements Iterable<T> {
         return new Iterator<T>() {
             @Override
             public boolean hasNext() {
-                return size != -1;
+                return cnt != -1;
             }
 
             @Override
             public T next() {
                 if (hasNext()) {
-                    return arr[size];
+                    return arr[cnt++];
                 } else {
                     throw new EmptyStackException();
                 }
@@ -62,24 +68,3 @@ public class MyStack<T> implements Iterable<T> {
         };
     }
 }
-
-/*
-  private void add(E e, Object[] elementData, int s) {
-        if (s == elementData.length)
-            elementData = grow();
-        elementData[s] = e;
-        elementCount = s + 1;
-   }
-
-  public synchronized void addElement(E obj) {
-        modCount++;
-        add(obj, elementData, elementCount);
-  }
-
-        public E push(E item) {
-        addElement(item);
-
-        return item;
-    }
-    }
-*/
