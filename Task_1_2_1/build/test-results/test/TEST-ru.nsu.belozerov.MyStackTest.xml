@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="ru.nsu.belozerov.MyStackTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2021-10-12T12:52:53" hostname="NOTANOBLE" time="0.024">
-  <properties/>
-  <testcase name="Test_MyStackOnString()" classname="ru.nsu.belozerov.MyStackTest" time="0.019"/>
-  <testcase name="Test_EmptyStack()" classname="ru.nsu.belozerov.MyStackTest" time="0.002"/>
-  <testcase name="Test_MyStackOnInt()" classname="ru.nsu.belozerov.MyStackTest" time="0.001"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>
