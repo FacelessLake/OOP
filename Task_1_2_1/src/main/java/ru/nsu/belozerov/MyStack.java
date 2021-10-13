@@ -5,8 +5,8 @@ import java.util.EmptyStackException;
 import java.util.Iterator;
 
 public class MyStack<T> implements Iterable<T> {
-    int cnt;
-    T[] arr;
+    private int cnt;
+    private T[] arr;
 
     @SuppressWarnings("unchecked")
     public MyStack() {
@@ -15,7 +15,9 @@ public class MyStack<T> implements Iterable<T> {
     }
 
     public void push(T item) {
-        arr = Arrays.copyOf(arr, cnt + 1);
+        if (cnt == arr.length) {
+            arr = Arrays.copyOf(arr, (cnt + 1) * 2);
+        }
         arr[cnt++] = item;
     }
 
@@ -23,9 +25,7 @@ public class MyStack<T> implements Iterable<T> {
         if (cnt == 0) {
             throw new EmptyStackException();
         }
-        T top = arr[--cnt];
-        arr = Arrays.copyOf(arr, cnt);
-        return top;
+        return arr[--cnt];
     }
 
     public int count() {
@@ -33,7 +33,7 @@ public class MyStack<T> implements Iterable<T> {
     }
 
     public void pushStack(MyStack<T> stack) {
-        int stackLen = stack.arr.length;
+        int stackLen = stack.count();
         arr = Arrays.copyOf(arr, cnt + stackLen);
         System.arraycopy(stack.arr, 0, arr, cnt, stackLen);
         cnt += stackLen;
@@ -50,21 +50,22 @@ public class MyStack<T> implements Iterable<T> {
         cnt -= elemCnt;
         System.arraycopy(arr, cnt, answerStack.arr, 0, elemCnt);
         arr = Arrays.copyOf(arr, cnt);
-        return (answerStack);
+        return answerStack;
     }
 
     @Override
     public Iterator<T> iterator() {
         return new Iterator<>() {
+            int iter = 0;
             @Override
             public boolean hasNext() {
-                return cnt != -1;
+                return iter != cnt;
             }
 
             @Override
             public T next() {
                 if (hasNext()) {
-                    return arr[cnt++];
+                    return arr[iter++];
                 } else {
                     throw new EmptyStackException();
                 }
