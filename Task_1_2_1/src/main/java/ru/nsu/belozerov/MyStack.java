@@ -57,6 +57,7 @@ public class MyStack<T> implements Iterable<T> {
     public Iterator<T> iterator() {
         return new Iterator<>() {
             int iter = 0;
+
             @Override
             public boolean hasNext() {
                 return iter != cnt;
