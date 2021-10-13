@@ -36,7 +36,6 @@ class MyStackTest {
     }
 
 
-
     @Test
     public void push_intStack() {
         msInt.push(47);
@@ -50,8 +49,8 @@ class MyStackTest {
         msInt.push(25);
         MyStack<Integer> ms2 = msInt.popStack(2);
 
-        assertEquals(ms2.pop(),25);
-        assertEquals(ms2.pop(),-11);
+        assertEquals(ms2.pop(), 25);
+        assertEquals(ms2.pop(), -11);
     }
 
     @Test
@@ -61,7 +60,7 @@ class MyStackTest {
         MyStack<Integer> ms2 = new MyStack<>();
         ms2.pushStack(msInt);
 
-        assertEquals(msInt.pop(),ms2.pop());
+        assertEquals(msInt.pop(), ms2.pop());
     }
 
     @BeforeEach
@@ -81,20 +80,20 @@ class MyStackTest {
     public void popStack_stringStack() {
         msStr.push("World");
         msStr.push("Hello");
-        MyStack<String > ms2 = msStr.popStack(2);
+        MyStack<String> ms2 = msStr.popStack(2);
 
-        assertEquals(ms2.pop(),"Hello");
-        assertEquals(ms2.pop(),"World");
+        assertEquals(ms2.pop(), "Hello");
+        assertEquals(ms2.pop(), "World");
     }
 
     @Test
     public void pushStack_stringStack() {
         msStr.push("999");
         msStr.push("-666");
-        MyStack<String > ms2 = new MyStack<>();
+        MyStack<String> ms2 = new MyStack<>();
         ms2.pushStack(msStr);
 
-        assertEquals(msStr.pop(),ms2.pop());
+        assertEquals(msStr.pop(), ms2.pop());
     }
 
     @Test
