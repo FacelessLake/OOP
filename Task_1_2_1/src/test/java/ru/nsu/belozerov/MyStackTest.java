@@ -1,6 +1,7 @@
 package ru.nsu.belozerov;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.EmptyStackException;
@@ -9,47 +10,104 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class MyStackTest {
 
-    @Test
-    public void Test_MyStackOnInt() {
-        MyStack<Integer> ms = new MyStack<>();
-        ms.push(47);
-        ms.push(19);
-        Assertions.assertEquals(2, ms.count());
+    private MyStack<Integer> msInt;
+    private MyStack<String> msStr;
 
+    @BeforeEach
+    void myStack() {
+        msInt = new MyStack<>();
+    }
+
+    @Test
+    public void pop_emptyStack() {
+        assertThrows(EmptyStackException.class, msInt::pop);
+    }
+
+    @Test
+    public void popStack_emptyStack() {
+        assertThrows(IndexOutOfBoundsException.class, () -> msInt.popStack(4));
+    }
+
+    @Test
+    public void pushStack_emptyStack() {
         MyStack<Integer> ms2 = new MyStack<>();
-        ms2.pushStack(ms);
-        ms2.pop();
-        ms.popStack(1);
-        assertArrayEquals(ms.arr, ms2.arr);
+        ms2.pushStack(msInt);
+        assertEquals(0, msInt.count());
+    }
+
+
+
+    @Test
+    public void push_intStack() {
+        msInt.push(47);
+        msInt.push(19);
+        assertEquals(2, msInt.count());
     }
 
     @Test
-    public void Test_MyStackOnString() {
-        MyStack<String> ms = new MyStack<>();
-        ms.push("I");
-        ms.push("Love");
-        ms.push("D&D");
-        Assertions.assertEquals(3, ms.count());
+    public void popStack_intStack() {
+        msInt.push(-11);
+        msInt.push(25);
+        MyStack<Integer> ms2 = msInt.popStack(2);
 
-        MyStack<String> ms2 = new MyStack<>();
-        ms2.pushStack(ms);
-        String val1 = ms2.pop();
-        MyStack<String> val = ms.popStack(2);
-        String val2 = val.pop();
-        assertEquals(val2, val1);
+        assertEquals(ms2.pop(),25);
+        assertEquals(ms2.pop(),-11);
     }
 
     @Test
-    public void Test_EmptyStack() {
-        MyStack<String> ms = new MyStack<>();
-        Assertions.assertEquals(0, ms.count());
+    public void pushStack_intStack() {
+        msInt.push(999);
+        msInt.push(-666);
+        MyStack<Integer> ms2 = new MyStack<>();
+        ms2.pushStack(msInt);
 
-        MyStack<String> ms2 = new MyStack<>();
-        ms2.pushStack(ms);
-        Assertions.assertEquals(0, ms2.count());
+        assertEquals(msInt.pop(),ms2.pop());
+    }
 
-        Assertions.assertThrows(EmptyStackException.class, ms::pop);
+    @BeforeEach
+    void myStringStack() {
+        msStr = new MyStack<>();
+    }
 
-        Assertions.assertThrows(IndexOutOfBoundsException.class, () -> ms.popStack(4));
+    @Test
+    public void push_stringStack() {
+        msStr.push("I");
+        msStr.push("Love");
+        msStr.push("D&D");
+        assertEquals(3, msStr.count());
+    }
+
+    @Test
+    public void popStack_stringStack() {
+        msStr.push("World");
+        msStr.push("Hello");
+        MyStack<String > ms2 = msStr.popStack(2);
+
+        assertEquals(ms2.pop(),"Hello");
+        assertEquals(ms2.pop(),"World");
+    }
+
+    @Test
+    public void pushStack_stringStack() {
+        msStr.push("999");
+        msStr.push("-666");
+        MyStack<String > ms2 = new MyStack<>();
+        ms2.pushStack(msStr);
+
+        assertEquals(msStr.pop(),ms2.pop());
+    }
+
+    @Test
+    public void iterator_string() {
+        msStr.push("N");
+        msStr.push("Y");
+        msStr.push("C");
+
+        StringBuilder answer = new StringBuilder();
+        for (String s : msStr) {
+            answer.append(s);
+        }
+
+        Assertions.assertEquals("NYC", answer.toString());
     }
 }
