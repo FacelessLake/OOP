@@ -7,6 +7,7 @@ import java.util.Iterator;
 public class MyStack<T> implements Iterable<T> {
     private int cnt;
     private T[] arr;
+    static final int MEM_EXTEND = 2;
 
     @SuppressWarnings("unchecked")
     public MyStack() {
@@ -16,7 +17,7 @@ public class MyStack<T> implements Iterable<T> {
 
     public void push(T item) {
         if (cnt == arr.length) {
-            arr = Arrays.copyOf(arr, (cnt + 1) * 2);
+            arr = Arrays.copyOf(arr, (cnt + 1) * MEM_EXTEND);
         }
         arr[cnt++] = item;
     }
