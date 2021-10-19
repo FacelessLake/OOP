@@ -42,8 +42,8 @@ public class RecordBook {
         grades.put(subject, mark);
     }
 
-    public void setQualiffTask(Marks qualiffTask) {
-        this.qualiffTask = qualiffTask;
+    public void setQualifTask(Marks qualifTask) {
+        this.qualiffTask = qualifTask;
     }
 
     public double average() {
@@ -71,5 +71,16 @@ public class RecordBook {
     public boolean scholarship() {
         return !grades.containsValue(Marks.Satisfactory) && !grades.containsValue((Marks.Poor));
 
+    }
+
+    public void showRecordBook() {
+        System.out.println("Full name: " + name + " " + surname + " " + patronymic);
+        System.out.println("Group: " + group);
+        System.out.println("========================================================");
+        for (HashMap.Entry grade : grades.entrySet()) {
+            System.out.println(grade.getKey() + ": " + grade.getValue());
+        }
+        System.out.println("========================================================");
+        System.out.println("Qualification task: " + qualiffTask);
     }
 }

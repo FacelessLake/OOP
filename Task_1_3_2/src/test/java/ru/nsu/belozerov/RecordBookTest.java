@@ -20,8 +20,10 @@ class RecordBookTest {
 
         assertFalse(rb.redDiploma());
 
-        rb.setQualiffTask(RecordBook.Marks.Excellent);
+        rb.setQualifTask(RecordBook.Marks.Excellent);
         assertFalse(rb.redDiploma());
         assertFalse(rb.scholarship());
+
+        rb.showRecordBook();
     }
 }
