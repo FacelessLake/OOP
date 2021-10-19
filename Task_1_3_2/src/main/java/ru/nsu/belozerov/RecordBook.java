@@ -22,17 +22,17 @@ public class RecordBook {
         }
     }
 
-    private HashMap<String, Marks> grades;
+    private final HashMap<String, Marks> grades;
     private Marks qualiffTask;
-    private String name;
-    private String surname;
-    private String patronymic;
-    private int group;
+    private final String NAME;
+    private final String SURNAME;
+    private final String PATRONYMIC;
+    private final int group;
 
     public RecordBook(String name, String surname, String patronymic, int group) {
-        this.name = name;
-        this.surname = surname;
-        this.patronymic = patronymic;
+        this.NAME = name;
+        this.SURNAME = surname;
+        this.PATRONYMIC = patronymic;
         this.group = group;
         grades = new HashMap<>();
         qualiffTask = Marks.Poor;
@@ -74,12 +74,10 @@ public class RecordBook {
     }
 
     public void showRecordBook() {
-        System.out.println("Full name: " + name + " " + surname + " " + patronymic);
+        System.out.println("Full name: " + NAME + " " + SURNAME + " " + PATRONYMIC);
         System.out.println("Group: " + group);
         System.out.println("========================================================");
-        for (HashMap.Entry grade : grades.entrySet()) {
-            System.out.println(grade.getKey() + ": " + grade.getValue());
-        }
+        grades.entrySet().stream().map(grade -> grade.getKey() + ": " + grade.getValue()).forEach(System.out::println);
         System.out.println("========================================================");
         System.out.println("Qualification task: " + qualiffTask);
     }
