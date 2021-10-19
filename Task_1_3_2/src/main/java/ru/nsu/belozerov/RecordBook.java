@@ -9,7 +9,7 @@ public class RecordBook {
         Good(4),
         Satisfactory(3),
         Poor(2),
-        Credit(0);
+        Passed(0);
 
         private final int gradeNum;
 
@@ -57,7 +57,7 @@ public class RecordBook {
                 cnt++;
             }
         }
-        return avg / cnt;
+        return avg/cnt;
     }
 
     public boolean redDiploma() {
@@ -80,5 +80,6 @@ public class RecordBook {
         grades.entrySet().stream().map(grade -> grade.getKey() + ": " + grade.getValue()).forEach(System.out::println);
         System.out.println("========================================================");
         System.out.println("Qualification task: " + qualiffTask);
+        System.out.println();
     }
 }
