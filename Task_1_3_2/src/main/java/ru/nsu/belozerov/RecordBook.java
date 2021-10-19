@@ -1,7 +1,6 @@
 package ru.nsu.belozerov;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 public class RecordBook {
 
@@ -12,7 +11,7 @@ public class RecordBook {
         Poor(2),
         Credit(0);
 
-        private int gradeNum;
+        private final int gradeNum;
 
         Marks(int mark) {
             gradeNum = mark;
@@ -23,16 +22,24 @@ public class RecordBook {
         }
     }
 
-    private List<Marks> grades;
+    private HashMap<String, Marks> grades;
     private Marks qualiffTask;
+    private String name;
+    private String surname;
+    private String patronymic;
+    private int group;
 
-    public RecordBook() {
-        grades = new ArrayList<>();
+    public RecordBook(String name, String surname, String patronymic, int group) {
+        this.name = name;
+        this.surname = surname;
+        this.patronymic = patronymic;
+        this.group = group;
+        grades = new HashMap<>();
         qualiffTask = Marks.Poor;
     }
 
-    public void addMark(Marks mark) {
-        grades.add(mark);
+    public void addMark(String subject, Marks mark) {
+        grades.put(subject, mark);
     }
 
     public void setQualiffTask(Marks qualiffTask) {
@@ -43,7 +50,7 @@ public class RecordBook {
         int iter;
         int cnt = 0;
         double avg = 0;
-        for (Marks num : grades) {
+        for (Marks num : grades.values()) {
             iter = num.getMark();
             if (iter > 0) {
                 avg += iter;
@@ -54,10 +61,15 @@ public class RecordBook {
     }
 
     public boolean redDiploma() {
-        if (grades.contains(Marks.Satisfactory) || grades.contains((Marks.Poor)))
+        if (grades.containsValue(Marks.Satisfactory) || grades.containsValue((Marks.Poor)))
             return false;
         if (average() < 4.75)
             return false;
         return qualiffTask == Marks.Excellent;
+    }
+
+    public boolean scholarship() {
+        return !grades.containsValue(Marks.Satisfactory) && !grades.containsValue((Marks.Poor));
+
     }
 }
