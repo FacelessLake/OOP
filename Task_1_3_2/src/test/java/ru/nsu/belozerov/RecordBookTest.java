@@ -56,6 +56,19 @@ class RecordBookTest {
     }
 
     @Test
+    public void heightenedScholarship_allExc() {
+        assertTrue(rb.heightenedScholarship());
+    }
+
+    @Test
+    public void heightenedScholarship_theeGood() {
+        rb.addMark("Operating Systems", RecordBook.Marks.Good);
+        rb.addMark("PE 2.0", RecordBook.Marks.Good);
+
+        assertFalse(rb.heightenedScholarship());
+    }
+
+    @Test
     public void average_test() {
         rb.addMark("Operating Systems", RecordBook.Marks.Satisfactory);
         assertEquals(32.0 / 7.0, rb.average());

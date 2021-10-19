@@ -57,7 +57,7 @@ public class RecordBook {
                 cnt++;
             }
         }
-        return avg/cnt;
+        return avg / cnt;
     }
 
     public boolean redDiploma() {
@@ -71,6 +71,15 @@ public class RecordBook {
     public boolean scholarship() {
         return !grades.containsValue(Marks.Satisfactory) && !grades.containsValue((Marks.Poor));
 
+    }
+
+    public boolean heightenedScholarship() {
+        int cnt = 0;
+        for (Marks num : grades.values()) {
+            if (num == Marks.Good)
+                cnt++;
+        }
+        return scholarship() && cnt < 3;
     }
 
     public void showRecordBook() {
