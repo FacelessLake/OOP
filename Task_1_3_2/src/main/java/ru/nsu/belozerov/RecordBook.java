@@ -23,19 +23,20 @@ public class RecordBook {
     }
 
     private final HashMap<String, Marks> grades;
-    private Marks qualiffTask;
+    private Marks qualifTask;
     private final String NAME;
     private final String SURNAME;
     private final String PATRONYMIC;
-    private final int group;
+    private final int GROUP;
 
     public RecordBook(String name, String surname, String patronymic, int group) {
         this.NAME = name;
         this.SURNAME = surname;
         this.PATRONYMIC = patronymic;
-        this.group = group;
+        this.GROUP = group;
         grades = new HashMap<>();
-        qualiffTask = Marks.Poor;
+        qualifTask = Marks.Poor;
+
     }
 
     public void addMark(String subject, Marks mark) {
@@ -43,7 +44,7 @@ public class RecordBook {
     }
 
     public void setQualifTask(Marks qualifTask) {
-        this.qualiffTask = qualifTask;
+        this.qualifTask = qualifTask;
     }
 
     public double average() {
@@ -61,15 +62,15 @@ public class RecordBook {
     }
 
     public boolean redDiploma() {
-        if (grades.containsValue(Marks.Satisfactory) || grades.containsValue((Marks.Poor)))
+        if (grades.containsValue(Marks.Satisfactory) || grades.containsValue(Marks.Poor))
             return false;
         if (average() < 4.75)
             return false;
-        return qualiffTask == Marks.Excellent;
+        return qualifTask == Marks.Excellent;
     }
 
     public boolean scholarship() {
-        return !grades.containsValue(Marks.Satisfactory) && !grades.containsValue((Marks.Poor));
+        return !grades.containsValue(Marks.Satisfactory) && !grades.containsValue(Marks.Poor);
 
     }
 
@@ -83,12 +84,23 @@ public class RecordBook {
     }
 
     public void showRecordBook() {
-        System.out.println("Full name: " + NAME + " " + SURNAME + " " + PATRONYMIC);
-        System.out.println("Group: " + group);
+        StringBuilder str = new StringBuilder("Full name: ");
+        str.append(NAME);
+        str.append(" ");
+        str.append(SURNAME);
+        str.append(" ");
+        str.append(PATRONYMIC);
+        System.out.println(str);
+
+        str = new StringBuilder("Group: ");
+        str.append(GROUP);
+        System.out.println(str);
         System.out.println("========================================================");
         grades.entrySet().stream().map(grade -> grade.getKey() + ": " + grade.getValue()).forEach(System.out::println);
         System.out.println("========================================================");
-        System.out.println("Qualification task: " + qualiffTask);
+        str = new StringBuilder("Qualification task: ");
+        str.append(qualifTask);
+        System.out.println(str);
         System.out.println();
     }
 }

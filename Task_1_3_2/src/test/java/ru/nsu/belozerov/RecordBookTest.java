@@ -45,12 +45,12 @@ class RecordBookTest {
     }
 
     @Test
-    public void scolarship_allExc() {
+    public void scholarship_allExc() {
         assertTrue(rb.scholarship());
     }
 
     @Test
-    public void scolarship_badMark() {
+    public void scholarship_badMark() {
         rb.addMark("Operating Systems", RecordBook.Marks.Satisfactory);
         assertFalse(rb.scholarship());
     }
@@ -75,7 +75,7 @@ class RecordBookTest {
     }
 
     @Test
-    public void avrage_withPassed() {
+    public void average_withPassed() {
         rb.addMark("Operating Systems", RecordBook.Marks.Passed);
         assertEquals(29.0 / 6.0, rb.average());
     }
