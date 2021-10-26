@@ -75,6 +75,10 @@ public class RecordBook {
         this.qualifTask = qualifTask;
     }
 
+    /**
+     * Allows you to count average score for the chosen semester
+     * @return average grade for the semester
+     */
     public double average() {
         int iter;
         int cnt = 0;
@@ -89,6 +93,10 @@ public class RecordBook {
         return avg / cnt;
     }
 
+    /**
+     * Allows you to find out is there a possibility of getting the red diploma for yor studying
+     * @return true if there's a chance, false if there's no
+     */
     public boolean redDiploma() {
         if (semester[semesterNum].containsValue(Marks.Satisfactory) || semester[semesterNum].containsValue(Marks.Poor))
             return false;
@@ -97,11 +105,19 @@ public class RecordBook {
         return qualifTask == Marks.Excellent;
     }
 
+    /**
+     * Allows you to find out can you get the scholarship in the chosen semester
+     * @return true if there's a chance, false if there's no
+     */
     public boolean scholarship() {
         return !semester[semesterNum].containsValue(Marks.Satisfactory) && !semester[semesterNum].containsValue(Marks.Poor);
 
     }
 
+    /**
+     * Allows you to find out can you get the heightened scholarship in the chosen semester
+     * @return true if there's a chance, false if there's no
+     */
     public boolean heightenedScholarship() {
         int cnt = 0;
         for (Marks num : semester[semesterNum].values()) {
@@ -111,6 +127,9 @@ public class RecordBook {
         return scholarship() && cnt < 3;
     }
 
+    /**
+     * Shows you your achievements
+     */
     public void showRecordBook() {
         StringBuilder str = new StringBuilder("Full name: ");
         str.append(NAME);
