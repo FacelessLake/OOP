@@ -52,6 +52,7 @@ public class RecordBook {
 
     /**
      * Allows you to add a new Semester to ypi record book
+     *
      * @param newSemester - new semester, which you want to change or work with
      */
     public void setNewSemester(int newSemester) {
@@ -60,8 +61,9 @@ public class RecordBook {
 
     /**
      * Allows you to add new subject with a mark
+     *
      * @param subject - name of subject
-     * @param mark - grade for this subject
+     * @param mark    - grade for this subject
      */
     public void addMark(String subject, Marks mark) {
         semester[semesterNum].put(subject, mark);
@@ -69,6 +71,7 @@ public class RecordBook {
 
     /**
      * Allows you to change the grade for the Qualification task
+     *
      * @param qualifTask - mark for the Qualification task that you want to set
      */
     public void setQualifTask(Marks qualifTask) {
@@ -77,6 +80,7 @@ public class RecordBook {
 
     /**
      * Allows you to count average score for the chosen semester
+     *
      * @return average grade for the semester
      */
     public double average() {
@@ -95,6 +99,7 @@ public class RecordBook {
 
     /**
      * Allows you to find out is there a possibility of getting the red diploma for yor studying
+     *
      * @return true if there's a chance, false if there's no
      */
     public boolean redDiploma() {
@@ -107,6 +112,7 @@ public class RecordBook {
 
     /**
      * Allows you to find out can you get the scholarship in the chosen semester
+     *
      * @return true if there's a chance, false if there's no
      */
     public boolean scholarship() {
@@ -116,6 +122,7 @@ public class RecordBook {
 
     /**
      * Allows you to find out can you get the heightened scholarship in the chosen semester
+     *
      * @return true if there's a chance, false if there's no
      */
     public boolean heightenedScholarship() {
