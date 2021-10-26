@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class RecordBookTest {
 
-    RecordBook rb = new RecordBook("Simon", "WhiteLake", "Mikhailovich", 20214);
+    RecordBook rb = new RecordBook("Simon", "WhiteLake", "Mikhailovich", 20214, 1);
 
     @BeforeEach
     public void myBook() {
@@ -78,5 +78,18 @@ class RecordBookTest {
     public void average_withPassed() {
         rb.addMark("Operating Systems", RecordBook.Marks.Passed);
         assertEquals(29.0 / 6.0, rb.average());
+    }
+
+    @Test
+    public void heightenedScholarship_twoSemesters() {
+        assertTrue(rb.heightenedScholarship());
+        rb.setNewSemester(2);
+        rb.addMark("PE 2.0", RecordBook.Marks.Poor);
+        rb.addMark("English 2.0", RecordBook.Marks.Excellent);
+        rb.addMark("OOP 2.0", RecordBook.Marks.Excellent);
+        rb.addMark("Introduction to AI 2.0", RecordBook.Marks.Excellent);
+        rb.addMark("Computing Systems 2.0", RecordBook.Marks.Excellent);
+        rb.addMark("Differential Equations 2.0", RecordBook.Marks.Good);
+        assertFalse(rb.heightenedScholarship());
     }
 }
