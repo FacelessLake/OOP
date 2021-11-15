@@ -91,4 +91,10 @@ class CalculatorTest {
     void compute_expression() {
         assertEquals(0, cl.compute("sin + - 1 2 1"));
     }
+
+    @Test
+    void compute_withMultipleSpaces() {
+        double a = 10, b = 15, c = 8;
+        assertEquals(a + b + c, cl.compute("+     +      10  15  8"));
+    }
 }

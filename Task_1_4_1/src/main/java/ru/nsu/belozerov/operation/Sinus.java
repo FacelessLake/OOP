@@ -6,10 +6,6 @@ import java.util.Stack;
 public class Sinus extends Operations {
     @Override
     public void count(Stack<Double> num) throws EmptyStackException {
-        try {
-            num.push(Math.sin(num.pop()));
-        } catch (EmptyStackException e) {
-            System.out.println("Not enough arguments for sinus!");
-        }
+        num.push(Math.sin(num.pop()));
     }
 }
