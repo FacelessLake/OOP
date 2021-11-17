@@ -1,39 +1,47 @@
 package ru.nsu.belozerov;
 
 import java.io.IOException;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        if (args.length < 1) {
-            System.out.println("parameters expected");
-            return;
-        }
 
         Notebook nb = new Notebook();
-        switch (args[0]) {
-            case "-add":
-                if (validateParameters(args, 3)) {
-                    nb.add(args[1]);
+        boolean flag = true;
+        while (flag) {
+            Scanner in = new Scanner(System.in);
+            String[] input = in.nextLine().split(" ");
+
+            switch (input[0]) {
+                case "-quit":{
+                    flag = false;
+                    break;
                 }
-                break;
-            case "-show":
-                if (validateParameters(args, 3)) {
-                    nb.show(args[1], args[2], args[3]);
-                }
-                break;
-            case "-rm":
-                if (validateParameters(args, 2)) {
-                    nb.remove(args[1]);
-                }
-                break;
-            default:
-                System.out.printf("Unexpected param %s\n", args[0]);
-                break;
+                case "-add":
+                    if (validateParameters(input, 2)) {
+                        nb.add(input[1]);
+                    }
+                    break;
+                case "-show":
+                    if (validateParameters(input, 4)) {
+                        nb.show(input[1], input[2], input[3]);
+                    }
+                    break;
+                case "-rm":
+                    if (validateParameters(input, 2)) {
+                        nb.remove(input[1]);
+                    }
+                    break;
+                default:
+                    System.out.printf("Unexpected param %s\n", input[0]);
+                    break;
+            }
         }
+
     }
 
-    public static boolean validateParameters(String[] args, int expected) {
-        if (args.length < expected) {
+    public static boolean validateParameters(String[] input, int expected) {
+        if (input.length < expected) {
             System.out.println("parameters expected");
             return false;
         }
