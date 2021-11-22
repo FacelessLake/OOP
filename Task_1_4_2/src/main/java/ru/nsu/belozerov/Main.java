@@ -18,10 +18,14 @@ public class Main {
                     break;
                 }
                 case "-add":
-                    if (validateParameters(input, 2)) {
-                        nb.add(input[1]);
+                    if (validateParameters(input, 3)) {
+                        nb.add(input[1],input[2]);
                     }
                     break;
+                case "-showall":
+                    if (validateParameters(input, 1)) {
+                        nb.show();
+                    }
                 case "-show":
                     if (validateParameters(input, 4)) {
                         nb.show(input[1], input[2], input[3]);
