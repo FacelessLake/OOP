@@ -1,30 +1,29 @@
 package ru.nsu.belozerov;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
 public class Notebook {
     private final List<Note> notebook;
-    private final Gson gsonData;
-    private final String notesFile = "Notes.json";
     private final DateTimeFormatter formatter;
 
     Notebook() {
         notebook = new ArrayList<>();
-        gsonData = new GsonBuilder().setPrettyPrinting().create();
         formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss");
     }
 
-    public void add(String heading, String text){
+    public void add(String heading, String text) {
         LocalDateTime now = LocalDateTime.now();
-        Note newNote = new Note(heading, now, text);
+        Note newNote = new Note(heading, text, now);
         notebook.add(newNote);
+    }
+
+    public void uploadFromJson(Note[] notes) {
+        notebook.addAll(Arrays.asList(notes));
     }
 
     public void remove(String heading) {
@@ -42,8 +41,7 @@ public class Notebook {
 
         Stream<Note> notebookStream = notebook.stream();
         return notebookStream
-                .filter(note -> note.getTime().isAfter(after))
-                .filter(note -> note.getTime().isBefore(before))
+                .filter(note -> note.getTime().isAfter(after) && note.getTime().isBefore(before))
                 .filter(note -> note.getHeading().contains(keyWord))
                 .toArray(Note[]::new);
     }
