@@ -5,10 +5,17 @@ import org.apache.commons.cli.*;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * Works with console - parse it and made appropriate actions from Notebook class
+ */
 public class ConsoleReader {
 
     private final Options options;
 
+
+    /**
+     * Number of possible options that can be parsed
+     */
     public ConsoleReader() {
         Option name = Option.builder("name")
                 .desc("Lets you to make a note with the specified name")
@@ -49,6 +56,12 @@ public class ConsoleReader {
         options.addOption(name);
     }
 
+
+    /**
+     * Starts the program
+     *
+     * @param args - arguments are taken from Main
+     */
     public void run(String[] args) {
         CommandLine line;
         try {
@@ -60,6 +73,14 @@ public class ConsoleReader {
         }
     }
 
+
+    /**
+     * The parser itself
+     *
+     * @param line - line that will be parsed
+     * @throws IOException              - if something goes wrong with the input this exception will be thrown
+     * @throws java.text.ParseException - if something goes wrong with options of parsing this exception will be thrown
+     */
     private void parseLine(CommandLine line) throws IOException, java.text.ParseException {
         File filename = new File("notes.json");
         if (line.hasOption("name")) {
