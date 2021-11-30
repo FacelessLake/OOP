@@ -10,19 +10,21 @@ public class ConsoleReader {
     private final Notebook notes = new Notebook();
 
     public ConsoleReader() {
-        options = new Options();
         Option add = Option.builder("add")
                 .numberOfArgs(2)
+                .optionalArg(false)
                 .build();
 
-        Option remove = Option.builder("remove")
+        Option remove = Option.builder("rm")
                 .hasArg()
+                .optionalArg(false)
                 .build();
 
         Option show = Option.builder("show")
-                .numberOfArgs(3)
+                .optionalArg(false)
                 .build();
 
+        options = new Options();
         options.addOption(add);
         options.addOption(remove);
         options.addOption(show);
@@ -41,24 +43,25 @@ public class ConsoleReader {
 
     private void parseLine(CommandLine line) throws IOException, java.text.ParseException {
         JsonHandler json = new JsonHandler();
-        json.open();
+        json.openRead();
+        notes.addAll(json.readJson());
+        json.openWrite();
 
         if (line.hasOption("add")) {
             String[] args = line.getOptionValues("add");
-            notes.uploadFromJson(json.readJson());
             notes.add(args[0], args[1]);
             json.writeJson(notes);
         }
 
-        if (line.hasOption("remove")) {
-            String[] args = line.getOptionValues("remove");
-            notes.uploadFromJson(json.readJson());
-            notes.remove(args[0]);
+        if (line.hasOption("rm")) {
+            String[] args = line.getOptionValues("rm");
+            notes.remove(args[0]); //should delete right things
         }
 
         if (line.hasOption("show")) {
             String[] args = line.getOptionValues("show");
             Note[] savedNotes;
+
             if (args.length > 0) {
                 savedNotes = notes.show(args[0], args[1], args[2]);
             } else {

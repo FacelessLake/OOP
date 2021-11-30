@@ -13,17 +13,23 @@ public class Notebook {
 
     Notebook() {
         notebook = new ArrayList<>();
-        formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss");
+        formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
     }
 
     public void add(String heading, String text) {
-        LocalDateTime now = LocalDateTime.now();
-        Note newNote = new Note(heading, text, now);
+        Note newNote = new Note(heading, text);
         notebook.add(newNote);
     }
 
-    public void uploadFromJson(Note[] notes) {
+    public void addAll(Note[] notes) {
+        if (notes == null){
+            return;
+        }
         notebook.addAll(Arrays.asList(notes));
+    }
+
+    public Note[] getNotes(){
+        return(notebook.toArray(Note[]::new));
     }
 
     public void remove(String heading) {
@@ -31,11 +37,10 @@ public class Notebook {
     }
 
     public Note[] show() {
-        return notebook.toArray(Note[]::new);
+        return getNotes();
     }
 
-    public Note[] show(String afterStr, String beforeStr, String keyWord) {
-
+    public Note[] show(String afterStr, String beforeStr, String keyWord) { //fix show
         LocalDateTime after = LocalDateTime.parse(afterStr, formatter);
         LocalDateTime before = LocalDateTime.parse(beforeStr, formatter);
 

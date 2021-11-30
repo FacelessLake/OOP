@@ -13,26 +13,32 @@ public class Note {
     @SerializedName("time")
     private LocalDateTime time;
 
-    Note(String heading, String text, LocalDateTime time) {
+    Note(String heading, String text) {
         this.heading = heading;
         this.text = text;
-        this.time = time;
+        time = LocalDateTime.now();
     }
 
     @Override
     public String toString() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
-        String date = formatter.format(time);
-        return "Heading: \"" + heading + "\"\n" +
-                "Date of creation: " + date + "\n" +
-                "Note: \"" + text + "\"";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
+        String dateTime = formatter.format(time);
+        return "\n=======================================\n" +
+                "Created: " + dateTime + "\n" +
+                "Heading: \"" + heading + "\"\n" +
+                "Note: \"" + text + "\"\n" +
+                "======================================\n";
     }
 
-    protected String getHeading() {
-        return this.heading;
+    public String getHeading() {
+        return heading;
     }
 
-    protected LocalDateTime getTime() {
-        return this.time;
+    public LocalDateTime getTime() {
+        return time;
+    }
+
+    public String getText() {
+        return text;
     }
 }
