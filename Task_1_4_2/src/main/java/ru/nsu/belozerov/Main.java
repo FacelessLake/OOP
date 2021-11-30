@@ -7,7 +7,8 @@ public class Main {
 //       args2[1] = "memes2";
 //        args2[0] = "-add";
 //        args2[2] = "want to try some more memes";
-        args2[0] = "-show";
+//        args2[0] = "-show";
+        args2[0] = "-help";
         ConsoleReader cr = new ConsoleReader();
         cr.run(args2);
     }

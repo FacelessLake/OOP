@@ -10,17 +10,24 @@ public class ConsoleReader {
     private final Notebook notes = new Notebook();
 
     public ConsoleReader() {
+        Option help = Option.builder("help")
+                .desc("Lets you see arguments descriptions")
+                .build();
+
         Option add = Option.builder("add")
                 .numberOfArgs(2)
+                .desc("Provided with two arguments: \"Title of your note\" and \"Note itself\"")
                 .optionalArg(false)
                 .build();
 
         Option remove = Option.builder("rm")
-                .hasArg()
+                .numberOfArgs(1)
+                .desc("Provided with one argument: \"Title of the note you want to delete\"")
                 .optionalArg(false)
                 .build();
 
         Option show = Option.builder("show")
+                .desc("Provided with tree arguments: \"From date\", \"To date\", \"Key words for searching\"; or without args to show all the notes")
                 .optionalArg(false)
                 .build();
 
@@ -28,6 +35,7 @@ public class ConsoleReader {
         options.addOption(add);
         options.addOption(remove);
         options.addOption(show);
+        options.addOption(help);
     }
 
     public void run(String[] args) {
@@ -37,7 +45,7 @@ public class ConsoleReader {
             line = parser.parse(options, args);
             parseLine(line);
         } catch (ParseException | IOException | java.text.ParseException e) {
-            e.printStackTrace();
+            System.out.println("Type -help for info");
         }
     }
 
@@ -46,6 +54,11 @@ public class ConsoleReader {
         json.openRead();
         notes.addAll(json.readJson());
         json.openWrite();
+
+        if (line.hasOption("help")) {
+            HelpFormatter formatter = new HelpFormatter();
+            formatter.printHelp("notes.jar", options);
+        }
 
         if (line.hasOption("add")) {
             String[] args = line.getOptionValues("add");
