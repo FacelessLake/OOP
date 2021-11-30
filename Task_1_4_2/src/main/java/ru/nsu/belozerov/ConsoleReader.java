@@ -50,29 +50,27 @@ public class ConsoleReader {
         if (line.hasOption("add")) {
             String[] args = line.getOptionValues("add");
             notes.add(args[0], args[1]);
-            json.writeJson(notes);
         }
 
         if (line.hasOption("rm")) {
             String[] args = line.getOptionValues("rm");
-            notes.remove(args[0]); //should delete right things
+            notes.remove(args[0]);
         }
 
         if (line.hasOption("show")) {
             String[] args = line.getOptionValues("show");
             Note[] savedNotes;
-
-            if (args.length > 0) {
-                savedNotes = notes.show(args[0], args[1], args[2]);
-            } else {
+            if (args == null) {
                 savedNotes = notes.show();
+            } else {
+                savedNotes = notes.show(args[0], args[1], args[2]);
             }
-
             for (Note savedNote : savedNotes) {
                 System.out.println(savedNote.toString());
             }
         }
 
+        json.writeJson(notes);
         json.close();
     }
 }
