@@ -12,7 +12,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 public class JsonHandler {
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
     private final Gson gson = new GsonBuilder()
             .registerTypeAdapter(LocalDateTime.class, (JsonDeserializer<LocalDateTime>)
                     (json, typeOfT, context) ->
@@ -33,7 +33,7 @@ public class JsonHandler {
     }
 
     public void openWrite() throws IOException {
-        writer = new FileWriter(file); //deletes contents of file
+        writer = new FileWriter(file, false);
     }
 
     public void close() throws IOException {
@@ -47,6 +47,6 @@ public class JsonHandler {
 
     public void writeJson(Notebook notes) throws IOException {
         writer = new FileWriter(file, false);
-        gson.toJson(notes.getNotes(), writer); //brackets
+        gson.toJson(notes.getNotes(), writer);
     }
 }

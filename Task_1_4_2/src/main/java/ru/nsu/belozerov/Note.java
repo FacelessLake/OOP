@@ -23,11 +23,11 @@ public class Note {
     public String toString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
         String dateTime = formatter.format(time);
-        return "\n=======================================\n" +
+        return "=======================================\n" +
                 "Created: " + dateTime + "\n" +
                 "Heading: \"" + heading + "\"\n" +
                 "Note: \"" + text + "\"\n" +
-                "======================================\n";
+                "=======================================\n";
     }
 
     public String getHeading() {
