@@ -2,32 +2,42 @@ package ru.nsu.belozerov;
 
 import org.apache.commons.cli.*;
 
+import java.io.File;
 import java.io.IOException;
 
 public class ConsoleReader {
 
     private final Options options;
-    private final Notebook notes = new Notebook();
 
     public ConsoleReader() {
+        Option name = Option.builder("name")
+                .desc("Lets you to make a note with the specified name")
+                .numberOfArgs(1)
+                .argName("file_name")
+                .optionalArg(false)
+                .build();
+
         Option help = Option.builder("help")
                 .desc("Lets you see arguments descriptions")
                 .build();
 
         Option add = Option.builder("add")
                 .numberOfArgs(2)
+                .argName("heading> <text")
                 .desc("Provided with two arguments: \"Title of your note\" and \"Note itself\"")
                 .optionalArg(false)
                 .build();
 
         Option remove = Option.builder("rm")
                 .numberOfArgs(1)
+                .argName("heading")
                 .desc("Provided with one argument: \"Title of the note you want to delete\"")
                 .optionalArg(false)
                 .build();
 
         Option show = Option.builder("show")
-                .desc("Provided with tree arguments: \"From date\", \"To date\", \"Key words for searching\"; or without args to show all the notes")
+                .desc("Provided with tree arguments: \"From date\", \"To date\", \"Key words for searching\";" +
+                        " or without args to show all the notes.\n <Date format: dd.MM.yyyy HH:mm:ss>")
                 .optionalArg(false)
                 .build();
 
@@ -36,6 +46,7 @@ public class ConsoleReader {
         options.addOption(remove);
         options.addOption(show);
         options.addOption(help);
+        options.addOption(name);
     }
 
     public void run(String[] args) {
@@ -50,7 +61,14 @@ public class ConsoleReader {
     }
 
     private void parseLine(CommandLine line) throws IOException, java.text.ParseException {
-        JsonHandler json = new JsonHandler();
+        File filename = new File("notes.json");
+        if (line.hasOption("name")) {
+            String[] args = line.getOptionValues("name");
+            filename = new File(args[0]);
+        }
+
+        Notebook notes = new Notebook();
+        JsonHandler json = new JsonHandler(filename);
         json.openRead();
         notes.addAll(json.readJson());
         json.openWrite();
@@ -87,4 +105,3 @@ public class ConsoleReader {
         json.close();
     }
 }
-

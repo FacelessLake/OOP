@@ -22,10 +22,12 @@ public class JsonHandler {
             .setPrettyPrinting()
             .create();
 
-    private final File file = new File("notes.json");
+    private final File file;
     private Reader reader = null;
     private FileWriter writer = null;
-
+    public JsonHandler(File filename) {
+        file = filename;
+    }
 
     public void openRead() throws IOException {
         file.createNewFile();
