@@ -85,7 +85,7 @@ public class JsonHandler {
     /**
      * Write into the .json file
      *
-     * @param notes - notes that will be writen
+     * @param notes - notes that will be written
      * @throws IOException - will be thrown if something will go wrong with file
      */
     public void writeJson(Notebook notes) throws IOException {
