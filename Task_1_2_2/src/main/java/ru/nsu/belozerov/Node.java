@@ -15,11 +15,19 @@ public class Node<T> {
         this.value = value;
     }
 
+    public boolean hasChildren() {
+        return !children.isEmpty();
+    }
+
     public void addChild(Node<T> child) {
         children.add(child);
     }
 
     public Set<Node<T>> getChildren() {
         return children;
+    }
+
+    public void removeChild(Node<T> child) {
+        children.remove(child);
     }
 }

@@ -10,7 +10,7 @@ class TreeTest {
     Tree<String> tree;
 
     @BeforeEach
-    void myTree(){
+    void myTree() {
         tree = new Tree<>("A");
         tree.add("A", "B");
         tree.add("A", "C");
@@ -25,8 +25,8 @@ class TreeTest {
     }
 
     @Test
-    void testBreadthFirstIterator() {
-        Node<String> node = new Node<>();
-        assertEquals("","");
+    void testRemoveNode() {
+        tree.remove("G");
+        assertFalse(tree.remove("G"));
     }
 }

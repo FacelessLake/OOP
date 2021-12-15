@@ -29,8 +29,8 @@ public class Tree<T> {
         return false;
     }
 
-    public void add(T parent, T newChild){
-        addNode(node,newChild,parent);
+    public boolean add(T parent, T newChild) {
+        return addNode(node, newChild, parent);
     }
 
     public Iterable<Node<T>> getChildren() {
@@ -42,7 +42,29 @@ public class Tree<T> {
         }
     }
 
-    public Node<T> getNode(){
-        return node;
+    public boolean removeNode(Node<T> root, T target) {
+        if (root == null) {
+            return false;
+        }
+        Node<T> childToRemove = null;
+        for (Node<T> child : root.getChildren()) {
+            if (child.getValue().equals(target)) {
+                childToRemove = child;
+                break;
+            } else {
+                if (removeNode(child, target)) {
+                    return true;
+                }
+            }
+        }
+        if (childToRemove == null) {
+            return false;
+        }
+        root.removeChild(childToRemove);
+        return true;
+    }
+
+    public boolean remove(T target) {
+        return removeNode(node, target);
     }
 }

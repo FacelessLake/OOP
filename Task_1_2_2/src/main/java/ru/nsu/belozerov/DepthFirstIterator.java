@@ -9,9 +9,9 @@ public class DepthFirstIterator<T> implements Iterator<Node<T>> {
     private Node<T> next;
 
     public DepthFirstIterator(Tree<T> tree, Node<T> startingVertex) {
-            stack.push(tree.getChildren().iterator());
-            this.tree = tree;
-            next = startingVertex;
+        stack.push(tree.getChildren().iterator());
+        this.tree = tree;
+        next = startingVertex;
     }
 
     @Override

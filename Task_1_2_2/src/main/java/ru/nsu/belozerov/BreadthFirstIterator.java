@@ -8,9 +8,9 @@ public class BreadthFirstIterator<T> implements Iterator<Node<T>> {
     private final Tree<T> tree;
 
     public BreadthFirstIterator(Tree<T> tree, Node<T> startingVertex) {
-            this.tree = tree;
-            queue.add(startingVertex);
-            visited.add(startingVertex);
+        this.tree = tree;
+        queue.add(startingVertex);
+        visited.add(startingVertex);
     }
 
     @Override
