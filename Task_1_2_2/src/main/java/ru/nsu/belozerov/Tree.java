@@ -11,11 +11,20 @@ public class Tree<T> {
         node.setValue(value);
     }
 
-    public boolean addNode(Node<T> root, T newChild, T parent) {
+    public Node<T> getRoot() {
+        return node;
+    }
+
+    private boolean addNode(Node<T> root, T newChild, T parent) {
         if (root == null) {
             return false;
         }
         if (root.getValue().equals(parent)) {
+            for (Node<T> child : root.getChildren()) {
+                if (child.getValue() == newChild) {
+                    return false;
+                }
+            }
             Node<T> newNode = new Node<>();
             newNode.setValue(newChild);
             root.addChild(newNode);
@@ -33,7 +42,7 @@ public class Tree<T> {
         return addNode(node, newChild, parent);
     }
 
-    public Iterable<Node<T>> getChildren() {
+    public Set<Node<T>> getSetOfChildren() {
         Set<Node<T>> children = node.getChildren();
         if (children == null || children.isEmpty()) {
             return Collections.emptySet();
@@ -42,7 +51,7 @@ public class Tree<T> {
         }
     }
 
-    public boolean removeNode(Node<T> root, T target) {
+    private boolean removeNode(Node<T> root, T target) {
         if (root == null) {
             return false;
         }

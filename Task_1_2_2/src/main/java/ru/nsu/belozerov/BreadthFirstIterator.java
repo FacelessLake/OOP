@@ -7,10 +7,10 @@ public class BreadthFirstIterator<T> implements Iterator<Node<T>> {
     private final Queue<Node<T>> queue = new LinkedList<>();
     private final Tree<T> tree;
 
-    public BreadthFirstIterator(Tree<T> tree, Node<T> startingVertex) {
+    public BreadthFirstIterator(Tree<T> tree) {
         this.tree = tree;
-        queue.add(startingVertex);
-        visited.add(startingVertex);
+        queue.add(tree.getRoot());
+        visited.add(tree.getRoot());
     }
 
     @Override
@@ -28,7 +28,7 @@ public class BreadthFirstIterator<T> implements Iterator<Node<T>> {
         if (!hasNext())
             throw new NoSuchElementException();
         Node<T> next = queue.remove();
-        for (Node<T> child : tree.getChildren()) {
+        for (Node<T> child : next.getChildren()) {
             if (!this.visited.contains(child)) {
                 this.queue.add(child);
                 this.visited.add(child);

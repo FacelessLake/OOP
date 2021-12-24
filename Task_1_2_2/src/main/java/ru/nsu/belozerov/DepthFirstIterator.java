@@ -8,10 +8,10 @@ public class DepthFirstIterator<T> implements Iterator<Node<T>> {
     private final Tree<T> tree;
     private Node<T> next;
 
-    public DepthFirstIterator(Tree<T> tree, Node<T> startingVertex) {
-        stack.push(tree.getChildren().iterator());
+    public DepthFirstIterator(Tree<T> tree) {
+        stack.push(tree.getSetOfChildren().iterator());
         this.tree = tree;
-        next = startingVertex;
+        next = tree.getRoot();
     }
 
     @Override
@@ -51,6 +51,6 @@ public class DepthFirstIterator<T> implements Iterator<Node<T>> {
 
             next = neighbors.next();
         } while (visited.contains(next));
-        stack.push(tree.getChildren().iterator());
+        stack.push(next.getChildren().iterator());
     }
 }
