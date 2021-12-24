@@ -44,18 +44,18 @@ class NumTreeTest {
 
     @Test
     void addNode() {
-        tree.add(1,99);
+        tree.add(1, 99);
         assertEquals(tree.getSetOfChildren().size(), 3);
     }
 
     @Test
     void addNode_nonExistingParent() {
         tree.remove(8);
-        assertFalse(tree.add(8,0));
+        assertFalse(tree.add(8, 0));
     }
 
     @Test
     void addNode_sameName() {
-        assertFalse(tree.add(8,9));
+        assertFalse(tree.add(8, 9));
     }
 }

@@ -4,7 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -13,6 +12,7 @@ public class IteratorsTest {
     BreadthFirstIterator<String> breadthFirst;
     DepthFirstIterator<String> depthFirst;
     ArrayList<String> output;
+
     @BeforeEach
     void myTree() {
         tree = new Tree<>("A");
@@ -32,8 +32,8 @@ public class IteratorsTest {
     }
 
     @Test
-    void BreadthFirstIteratorTest(){
-        while (breadthFirst.hasNext()){
+    void BreadthFirstIteratorTest() {
+        while (breadthFirst.hasNext()) {
             output.add(breadthFirst.next().getValue());
         }
         System.out.println(output.toString());
@@ -41,8 +41,8 @@ public class IteratorsTest {
     }
 
     @Test
-    void DepthFirstIteratorTest(){
-        while (depthFirst.hasNext()){
+    void DepthFirstIteratorTest() {
+        while (depthFirst.hasNext()) {
             output.add(depthFirst.next().getValue());
         }
         System.out.println(output.toString());

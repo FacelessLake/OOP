@@ -44,18 +44,18 @@ class TextTreeTest {
 
     @Test
     void addNode() {
-        tree.add("A","Z");
+        tree.add("A", "Z");
         assertEquals(tree.getSetOfChildren().size(), 3);
     }
 
     @Test
     void addNode_nonExistingParent() {
         tree.remove("H");
-        assertFalse(tree.add("H","O"));
+        assertFalse(tree.add("H", "O"));
     }
 
     @Test
     void addNode_sameName() {
-        assertFalse(tree.add("H","I"));
+        assertFalse(tree.add("H", "I"));
     }
 }
