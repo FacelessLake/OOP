@@ -18,9 +18,14 @@ public class Tree<T> {
      * @param value - value of the root
      */
     public Tree(T value) {
-        size = 0;
+        size = 1;
         node = new Node<>();
         node.setValue(value);
+    }
+
+    private Tree(Node<T> root, int size) {
+        this.size = size;
+        node = root;
     }
 
     /**
@@ -81,6 +86,64 @@ public class Tree<T> {
         }
     }
 
+    private Node<T> get(Node<T> root, T target) {
+        for (Node<T> child : root.getChildren()) {
+            if (child.getValue() == target) {
+                return child;
+            }
+        }
+        for (Node<T> child : root.getChildren()) {
+            Node<T> subTree = get(child, target);
+            if (subTree != null) {
+                return subTree;
+            }
+        }
+        return null;
+    }
+
+    private int countSubtreeSize(Node<T> root, int counter) {
+        counter += root.getChildren().size();
+        for (Node<T> child : root.getChildren()) {
+            countSubtreeSize(child, counter);
+        }
+        return counter;
+    }
+
+    /**
+     * Allows getting the subtree of the current tree
+     *
+     * @param target - value of the node, that will become root of your new subtree
+     * @return the subtree
+     */
+    public Tree<T> getSubtree(T target) {
+        if (node == null) {
+            throw new NoSuchElementException();
+        }
+        Node<T> root = get(node, target);
+        if (root == null) {
+            throw new NoSuchElementException();
+        }
+        int size = countSubtreeSize(root, 1);
+        return new Tree<>(root, size);
+    }
+
+    /**
+     * Allows getting the node of the current tree by the given name
+     *
+     * @param target - name of the node you want to get
+     * @return the node itself
+     */
+    public Node<T> getNode(T target) {
+        if (node == null) {
+            throw new NoSuchElementException();
+        }
+        Node<T> root = get(node, target);
+        if (root == null) {
+            throw new NoSuchElementException();
+        }
+        return get(node, target);
+    }
+
     private boolean removeNode(Node<T> root, T target) {
         if (root == null) {
             return false;
@@ -121,5 +184,23 @@ public class Tree<T> {
      */
     public int getSize() {
         return size;
+    }
+
+    /**
+     * Allows traversing the tree breadth first
+     *
+     * @return tree iterator
+     */
+    public Iterator<Node<T>> iterateBreadthFirst() {
+        return new BreadthFirstIterator<>(this);
+    }
+
+    /**
+     * Allows traversing the tree depth first
+     *
+     * @return tree iterator
+     */
+    public Iterator<Node<T>> iterateDepthFirst() {
+        return new DepthFirstIterator<>(this);
     }
 }

@@ -3,11 +3,16 @@ package ru.nsu.belozerov;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class TextTreeTest {
 
     Tree<String> tree;
+    ArrayList<String> output;
 
     @BeforeEach
     void myTree() {
@@ -22,6 +27,7 @@ class TextTreeTest {
         tree.add("H", "I");
         tree.add("H", "J");
         tree.add("H", "K");
+        output = new ArrayList<>();
     }
 
     @Test
@@ -57,5 +63,46 @@ class TextTreeTest {
     @Test
     void addNode_sameName() {
         assertFalse(tree.add("H", "I"));
+    }
+
+    @Test
+    void getSize() {
+        assertEquals(11, tree.getSize());
+    }
+
+    @Test
+    void getSubtree() {
+        Tree<String> newTree = tree.getSubtree("H");
+        assertEquals(4, newTree.getSize());
+    }
+
+    @Test
+    void getSubtree_noSuchNode() {
+        assertThrows(NoSuchElementException.class, () -> tree.getSubtree("P"));
+    }
+
+    @Test
+    void getNode_noSuchNode() {
+        assertThrows(NoSuchElementException.class, () -> tree.getNode("P"));
+    }
+
+    @Test
+    void BreadthFirstIteratorTest() {
+        Iterator<Node<String>> iterator = tree.iterateBreadthFirst();
+        while (iterator.hasNext()) {
+            output.add(iterator.next().getValue());
+        }
+        System.out.println(output.toString());
+        assertTrue(output.indexOf("B") < output.indexOf("E"));
+    }
+
+    @Test
+    void DepthFirstIteratorTest() {
+        Iterator<Node<String>> iterator = tree.iterateDepthFirst();
+        while (iterator.hasNext()) {
+            output.add(iterator.next().getValue());
+        }
+        System.out.println(output.toString());
+        assertTrue(output.indexOf("B") < output.indexOf("E"));
     }
 }
