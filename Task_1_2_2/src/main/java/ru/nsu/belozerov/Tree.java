@@ -7,7 +7,7 @@ import java.util.*;
  *
  * @param <T> - type of the tree and its nodes
  */
-public class Tree<T> implements Iterable<Node<T>>{
+public class Tree<T> implements Iterable<Node<T>> {
 
     private final Node<T> node;
     private int size;
