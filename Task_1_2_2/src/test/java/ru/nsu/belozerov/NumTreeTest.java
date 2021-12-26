@@ -82,6 +82,12 @@ class NumTreeTest {
     }
 
     @Test
+    void getNode() {
+        Integer target = 5;
+        assertEquals(target, tree.getNode(target).getValue());
+    }
+
+    @Test
     void getNode_noSuchNode() {
         assertThrows(NoSuchElementException.class, () -> tree.getNode(200));
     }

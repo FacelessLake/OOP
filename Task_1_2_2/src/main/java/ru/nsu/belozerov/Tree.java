@@ -7,7 +7,7 @@ import java.util.*;
  *
  * @param <T> - type of the tree and its nodes
  */
-public class Tree<T> {
+public class Tree<T> implements Iterable<Node<T>>{
 
     private final Node<T> node;
     private int size;
@@ -202,5 +202,15 @@ public class Tree<T> {
      */
     public Iterator<Node<T>> iterateDepthFirst() {
         return new DepthFirstIterator<>(this);
+    }
+
+    /**
+     * Allows traversing the tree breadth first
+     *
+     * @return tree iterator
+     */
+    @Override
+    public Iterator<Node<T>> iterator() {
+        return new BreadthFirstIterator<>(this);
     }
 }

@@ -82,6 +82,12 @@ class TextTreeTest {
     }
 
     @Test
+    void getNode() {
+        String target = "I";
+        assertEquals(target, tree.getNode(target).getValue());
+    }
+
+    @Test
     void getNode_noSuchNode() {
         assertThrows(NoSuchElementException.class, () -> tree.getNode("P"));
     }
