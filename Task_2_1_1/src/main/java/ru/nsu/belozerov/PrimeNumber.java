@@ -2,7 +2,7 @@ package ru.nsu.belozerov;
 
 public class PrimeNumber {
 
-    private boolean checkNotPrime(int number) {
+    public boolean checkNotPrime(int number) {
         boolean answer = false;
         if (number == 0 || number == 1) {
             answer = true;
