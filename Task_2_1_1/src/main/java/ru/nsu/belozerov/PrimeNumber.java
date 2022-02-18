@@ -2,14 +2,14 @@ package ru.nsu.belozerov;
 
 public class PrimeNumber {
 
-    private boolean checkPrime(int number) {
-        boolean answer = true;
+    private boolean checkNotPrime(int number) {
+        boolean answer = false;
         if (number == 0 || number == 1) {
-            answer = false;
+            answer = true;
         } else {
             for (int i = 2; i <= Math.sqrt(number); i++) {
                 if (number % i == 0) {
-                    answer = false;
+                    answer = true;
                     break;
                 }
             }
@@ -17,9 +17,9 @@ public class PrimeNumber {
         return answer;
     }
 
-    public boolean checkArray(int[] array){
+    public boolean checkArray(int[] array) {
         for (int j : array) {
-            if (checkPrime(j)) {
+            if (checkNotPrime(j)) {
                 return true;
             }
         }
