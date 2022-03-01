@@ -1,19 +1,23 @@
 package ru.nsu.belozerov;
 
+import java.util.Arrays;
+import java.util.Stack;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
 public class PrimeNumberThreads {
-    public boolean checkPrimeThreads(int[] array) throws ExecutionException, InterruptedException {
-        Callable<Boolean> task = () -> {
-            PrimeNumber pn = new PrimeNumber();
-            return pn.checkArray(array);
-        };
+
+    static public boolean checkPrimeThreads(Integer[] array) throws ExecutionException, InterruptedException {
+        Stack<Integer> stack = new Stack<>();
+        Arrays.stream(array).forEach(stack::push);
+
+        Callable<Boolean> task = () -> PrimeNumber.checkNotPrime(stack.pop());
         FutureTask<Boolean> future = new FutureTask<>(task);
 
-        Thread[] threads = new Thread[5];
-        for (int i = 1; i < 5; i++) {
+        int threadsAvailable = Runtime.getRuntime().availableProcessors();
+        Thread[] threads = new Thread[threadsAvailable];
+        for (int i = 1; i < threadsAvailable; i++) {
             threads[i] = new Thread(future);
             threads[i].start();
         }
