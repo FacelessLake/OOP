@@ -1,26 +1,39 @@
 package ru.nsu.belozerov;
 
-import java.util.Arrays;
-import java.util.Stack;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.FutureTask;
-
+import java.util.*;
+import java.util.concurrent.*;
+/**
+ * Class for prime number check using threads
+ */
 public class PrimeNumberThreads {
-
-    static public boolean checkPrimeThreads(Integer[] array) throws ExecutionException, InterruptedException {
-        Stack<Integer> stack = new Stack<>();
-        Arrays.stream(array).forEach(stack::push);
-
-        Callable<Boolean> task = () -> PrimeNumber.checkNotPrime(stack.pop());
-        FutureTask<Boolean> future = new FutureTask<>(task);
+    /**
+     * Checks if an array contains a number that is NOT prime using threads
+     * @param array - array you want to check
+     * @return true - if it contains NOT prime number, false - otherwise
+     * @throws InterruptedException – if the current thread was interrupted while waiting
+     * @throws ExecutionException – if the computation threw an exception
+     */
+    static public boolean checkPrimeThreads(int[] array) throws InterruptedException, ExecutionException {
+        Deque<Integer> deque = new ArrayDeque<>(Arrays.stream(array).boxed().toList());
+        Callable<Boolean> task = () -> {
+            if (!deque.isEmpty()) {
+                return PrimeNumber.checkNotPrime(deque.pop());
+            }
+            return false;
+        };
 
         int threadsAvailable = Runtime.getRuntime().availableProcessors();
-        Thread[] threads = new Thread[threadsAvailable];
-        for (int i = 1; i < threadsAvailable; i++) {
-            threads[i] = new Thread(future);
-            threads[i].start();
+        List<Callable<Boolean>> taskList = Collections.nCopies(threadsAvailable, task);
+
+        ExecutorService threads = Executors.newFixedThreadPool(threadsAvailable);
+        List<Future<Boolean>> results = threads.invokeAll(taskList);
+        for (Future<Boolean> result : results) {
+            if (result.get()) {
+                threads.shutdownNow();
+                return true;
+            }
         }
-        return future.get();
+        threads.shutdownNow();
+        return false;
     }
 }
