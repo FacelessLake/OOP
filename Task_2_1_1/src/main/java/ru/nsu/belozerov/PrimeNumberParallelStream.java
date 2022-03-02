@@ -9,6 +9,7 @@ import java.util.stream.IntStream;
 public class PrimeNumberParallelStream {
     /**
      * Checks if an array contains a number that is NOT prime using parallel streams
+     *
      * @param arr - array you want to check
      * @return true - if it contains NOT prime number, false - otherwise
      */
