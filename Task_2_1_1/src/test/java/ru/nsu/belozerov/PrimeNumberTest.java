@@ -8,7 +8,7 @@ import java.util.concurrent.ExecutionException;
 import static org.junit.jupiter.api.Assertions.*;
 
 class PrimeNumberTest {
-    private static final Random random = new Random();
+    private final Random random = new Random();
 
     @Test
     void checkArray_true() {
@@ -110,5 +110,10 @@ class PrimeNumberTest {
     void checkParallelStreams_random() {
         int[] arr = random.ints(10000, 0, Integer.MAX_VALUE).toArray();
         assertEquals(PrimeNumber.checkArray(arr), PrimeNumberParallelStream.parallelCheck(arr));
+    }
+
+    @Test
+    void performanceTest() throws ExecutionException, InterruptedException {
+        PerformanceTest.PrimeNumberPerformanceTest();
     }
 }
