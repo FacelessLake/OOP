@@ -9,6 +9,10 @@ public class DataQueue {
     private final Object FULL_QUEUE = new Object();
     private final Object EMPTY_QUEUE = new Object();
 
+    DataQueue() {
+        this.maxSize = Integer.MAX_VALUE;
+    }
+
     DataQueue(int maxSize) {
         this.maxSize = maxSize;
     }
