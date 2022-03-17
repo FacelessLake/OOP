@@ -7,6 +7,6 @@ public class DeliveryGuy extends ProducerConsumer {
 
     @Override
     public void run() {
-        consume();
+        consumeRun();
     }
 }

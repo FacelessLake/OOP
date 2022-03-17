@@ -8,6 +8,7 @@ public class ProducerConsumer implements Runnable {
     private volatile boolean runProducerFlag;
     private volatile boolean runConsumerFlag;
     private int orderCounter;
+    private int deliveryCounter;
     private final String orderProduceStatus;
     private final String orderConsumeStatus;
     public int processingTime = 0;
@@ -35,102 +36,65 @@ public class ProducerConsumer implements Runnable {
 
     @Override
     public void run() {
-        produce();
     }
 
-    @SuppressWarnings("BusyWait")
-    public void produce() {
+    public void produceRun() {
         while (runProducerFlag) {
             Order order = generateOrder();
-            while (producerQueue.isFull()) {
-                try {
-                    producerQueue.waitOnFull();
-                } catch (InterruptedException e) {
-                    break;
-                }
-            }
-            if (!runProducerFlag) {
-                break;
-            }
-            producerQueue.add(order);
-            producerQueue.notifyAllForEmpty();
-            try {
-                Thread.sleep(random.nextInt(processingTime));
-            } catch (InterruptedException e) {
-                if (!runProducerFlag) {
-                    break;
-                }
-            }
+            producer(order);
         }
     }
 
-    @SuppressWarnings("BusyWait")
-    public void consume() {
+    public void consumeRun() {
         while (runConsumerFlag) {
-            if (consumerQueue.isEmpty()) {
-                try {
-                    consumerQueue.waitOnEmpty();
-                } catch (InterruptedException ignored) {
-                }
-            }
-            if (!runConsumerFlag) {
-                break;
-            }
-            Order order = consumerQueue.remove();
-            changeOrderStatus(order);
-            consumerQueue.notifyAllForFull();
-            try {
-                Thread.sleep(random.nextInt(processingTime));
-            } catch (InterruptedException e) {
-                if (!runConsumerFlag) {
-                    break;
-                }
-            }
+            consumer();
         }
     }
 
-    @SuppressWarnings("BusyWait")
-    public void consumeProduce() {
+    private void consumer() {
+        if (consumerQueue.isEmpty()) {
+            try {
+                consumerQueue.waitOnEmpty();
+            } catch (InterruptedException ignored) {
+            }
+        }
+        if (!runConsumerFlag) {
+            return;
+        }
+        Order order = consumerQueue.remove();
+        changeOrderStatus(order);
+        deliveryCounter = order.getOrderNumber();
+        consumerQueue.notifyAllForFull();
+        try {
+            Thread.sleep(random.nextInt(processingTime));
+        } catch (InterruptedException ignored) {
+        }
+    }
+
+    public void consumeProduceRun() {
         while (runConsumerFlag) {
-            if (consumerQueue.isEmpty()) {
-                try {
-                    consumerQueue.waitOnEmpty();
-                } catch (InterruptedException ignored) {
-                }
-            }
-            if (!runConsumerFlag) {
+            consumer();
+            Order delivery = generateDelivery(deliveryCounter);
+            producer(delivery);
+        }
+    }
+
+    private void producer(Order delivery) {
+        while (producerQueue.isFull()) {
+            try {
+                producerQueue.waitOnFull();
+            } catch (InterruptedException e) {
                 break;
             }
-            Order order = consumerQueue.remove();
-            changeOrderStatus(order);
-            consumerQueue.notifyAllForFull();
-            try {
-                Thread.sleep(random.nextInt(processingTime));
-            } catch (InterruptedException e) {
-                if (!runConsumerFlag) {
-                    break;
-                }
-            }
-            Order delivery = generateDelivery(order.getOrderNumber());
-            while (producerQueue.isFull()) {
-                try {
-                    producerQueue.waitOnFull();
-                } catch (InterruptedException e) {
-                    break;
-                }
-            }
-            if (!runProducerFlag) {
-                break;
-            }
-            producerQueue.add(delivery);
-            producerQueue.notifyAllForEmpty();
-            try {
-                Thread.sleep(random.nextInt(processingTime));
-            } catch (InterruptedException e) {
-                if (!runProducerFlag) {
-                    break;
-                }
-            }
+        }
+        if (!runProducerFlag) {
+            return;
+        }
+        producerQueue.add(delivery);
+        producerQueue.notifyAllForEmpty();
+        try {
+            Thread.sleep(random.nextInt(processingTime));
+        } catch (InterruptedException ignored) {
         }
     }
 
