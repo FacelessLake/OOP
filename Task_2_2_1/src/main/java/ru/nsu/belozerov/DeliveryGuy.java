@@ -2,6 +2,11 @@ package ru.nsu.belozerov;
 
 public class DeliveryGuy extends ProducerConsumer {
     public DeliveryGuy(DataQueue deliveryQueue) {
-        super(deliveryQueue, "On the way");
+        super(deliveryQueue, "Delivered");
+    }
+
+    @Override
+    public void run() {
+        consume();
     }
 }
