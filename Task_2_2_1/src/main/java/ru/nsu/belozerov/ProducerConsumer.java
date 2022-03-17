@@ -1,16 +1,22 @@
 package ru.nsu.belozerov;
 
+import java.util.Random;
+
 public class ProducerConsumer implements Runnable {
     private final DataQueue producerQueue;
     private final DataQueue consumerQueue;
     private volatile boolean runFlag;
     private int orderCounter;
-    private final String orderStatus;
+    private final String orderProduceStatus;
+    private final String orderConsumeStatus;
+    private int processingTime = 0;
+    private final Random random = new Random();
 
-    public ProducerConsumer(DataQueue consumerQueue, DataQueue producerQueue, String orderStatus) {
+    public ProducerConsumer(DataQueue consumerQueue, DataQueue producerQueue, String orderProduceStatus, String orderConsumeStatus) {
         this.producerQueue = producerQueue;
         this.consumerQueue = consumerQueue;
-        this.orderStatus = orderStatus;
+        this.orderProduceStatus = orderProduceStatus;
+        this.orderConsumeStatus = orderConsumeStatus;
         runFlag = true;
         orderCounter = 0;
     }
@@ -18,7 +24,8 @@ public class ProducerConsumer implements Runnable {
     public ProducerConsumer(DataQueue dataQueue, String orderStatus) {
         this.producerQueue = dataQueue;
         this.consumerQueue = dataQueue;
-        this.orderStatus = orderStatus;
+        this.orderProduceStatus = orderStatus;
+        this.orderConsumeStatus = orderStatus;
         runFlag = true;
         orderCounter = 0;
     }
@@ -29,7 +36,8 @@ public class ProducerConsumer implements Runnable {
         produce();
     }
 
-    private void produce() {
+    @SuppressWarnings("BusyWait")
+    public void produce() {
         while (runFlag) {
             Order order = generateOrder();
             while (producerQueue.isFull()) {
@@ -44,10 +52,16 @@ public class ProducerConsumer implements Runnable {
             }
             producerQueue.add(order);
             producerQueue.notifyAllForEmpty();
+            try {
+                Thread.sleep(this.random.nextInt(this.processingTime));
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    private void consume() {
+    @SuppressWarnings("BusyWait")
+    public void consume() {
         while (runFlag) {
             Order order;
             if (consumerQueue.isEmpty()) {
@@ -63,20 +77,30 @@ public class ProducerConsumer implements Runnable {
             order = consumerQueue.remove();
             consumerQueue.notifyAllForFull();
             changeOrderStatus(order);
+            try {
+                Thread.sleep(this.random.nextInt(this.processingTime));
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     private Order generateOrder() {
         Order order = new Order();
         orderCounter++;
-        order.setOrderStatus(orderStatus);
+        order.setOrderStatus(orderProduceStatus);
         order.setOrderNumber(orderCounter);
+        System.out.println("Order[" + orderCounter + "] is " + orderProduceStatus);
         return order;
     }
 
+    public void changeProcessingTime(int time) {
+        processingTime = time;
+    }
 
     public void changeOrderStatus(Order order) {
-        order.setOrderStatus(orderStatus);
+        order.setOrderStatus(orderConsumeStatus);
+        System.out.println("Order[" + order.getOrderNumber() + "] is " + orderConsumeStatus);
     }
 
     public void stopProduce() {
