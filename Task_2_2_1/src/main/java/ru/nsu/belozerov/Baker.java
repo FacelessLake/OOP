@@ -2,7 +2,11 @@ package ru.nsu.belozerov;
 
 public class Baker extends ProducerConsumer {
 
-    public Baker(DataQueue consumerQueue, DataQueue producerQueue) {
-        super(consumerQueue, producerQueue, "Cooking", "On the Way");
+    public Baker(DataQueue orderQueue, DataQueue deliveryQueue) {
+        super(orderQueue, deliveryQueue, "Cooking", "On the Way");
+    }
+    @Override
+    public void produce(){
+        consumeProduce();
     }
 }
