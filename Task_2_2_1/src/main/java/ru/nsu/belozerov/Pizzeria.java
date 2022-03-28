@@ -9,13 +9,13 @@ public class Pizzeria {
     private final Customers customers;
 
 
-    public Pizzeria(int bakersAmount, int bakersSpeed, int deliverersAmount, int deliverersSpeed, int storageSize, int trunkSize, int ordersDelay) {
+    public Pizzeria(int bakersAmount, int[] bakersProductivity, int deliverersAmount, int[] deliverersProductivity, int storageSize, int[] trunkSizes, int ordersDelay) {
 
         DataQueue deliveryQueue = new DataQueue(storageSize);
         deliverers = new ArrayList<>();
         for (int i = 0; i < deliverersAmount; i++) {
-            DeliveryGuy deliverer = new DeliveryGuy(deliveryQueue);
-            deliverer.changeProcessingTime(deliverersSpeed);
+            DeliveryGuy deliverer = new DeliveryGuy(deliveryQueue, trunkSizes[i]);
+            deliverer.changeProcessingTime(deliverersProductivity[i]);
             deliverers.add(deliverer);
         }
 
@@ -23,7 +23,7 @@ public class Pizzeria {
         bakers = new ArrayList<>();
         for (int i = 0; i < bakersAmount; i++) {
             Baker baker = new Baker(ordersQueue, deliveryQueue);
-            baker.changeProcessingTime(bakersSpeed);
+            baker.changeProcessingTime(bakersProductivity[i]);
             bakers.add(baker);
         }
         customers = new Customers(ordersQueue);
@@ -39,12 +39,10 @@ public class Pizzeria {
 
     public void pizzeriaStop() throws InterruptedException {
         customers.stopProduce();
-        int SLEEP_TIME = 1000;
-        Thread.sleep(SLEEP_TIME);
+        Thread.sleep(15 * 1000);
         bakers.forEach(Baker::stopConsume);
-        Thread.sleep(SLEEP_TIME);
         bakers.forEach(Baker::stopProduce);
-        Thread.sleep(SLEEP_TIME);
-        deliverers.forEach(DeliveryGuy::stopProduce);
+        Thread.sleep(30 * 1000);
+        deliverers.forEach(DeliveryGuy::stopConsume);
     }
 }
