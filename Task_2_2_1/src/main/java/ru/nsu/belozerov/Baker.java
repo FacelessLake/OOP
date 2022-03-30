@@ -2,9 +2,8 @@ package ru.nsu.belozerov;
 
 import java.util.Random;
 
-public class Baker implements Consumer, Producer<Order> {
+public class Baker implements Consumer, Producer {
     public final DataQueue orderQueue;
-    private int orderCounter;
     private final String orderProduceStatus;
 
     private final DataQueue deliveryQueue;
@@ -27,8 +26,7 @@ public class Baker implements Consumer, Producer<Order> {
     public void run() {
         while (getFlag()) {
             consumer();
-            Order delivery = generateDelivery();
-            producer(delivery);
+            producer();
         }
     }
 
@@ -71,7 +69,7 @@ public class Baker implements Consumer, Producer<Order> {
     }
 
     @Override
-    public void producer(Order delivery) {
+    public void producer() {
         while (deliveryQueue.isFull()) {
             try {
                 deliveryQueue.waitOnFull();
@@ -82,6 +80,7 @@ public class Baker implements Consumer, Producer<Order> {
         if (!getFlag()) {
             return;
         }
+        Order delivery = generateDelivery();
         changeOrderStatus(delivery, orderProduceStatus);
         deliveryQueue.add(delivery);
         deliveryQueue.notifyAllForEmpty();
@@ -104,5 +103,6 @@ public class Baker implements Consumer, Producer<Order> {
     public void stopProduce() {
         runFlag = false;
         deliveryQueue.notifyAllForFull();
+        orderQueue.notifyAllForEmpty();
     }
 }

@@ -2,7 +2,7 @@ package ru.nsu.belozerov;
 
 import java.util.Random;
 
-public class Customers implements Producer<Order> {
+public class Customers implements Producer {
     public final DataQueue orderQueue;
     private int orderCounter;
     private final String orderProduceStatus;
@@ -20,8 +20,7 @@ public class Customers implements Producer<Order> {
     @Override
     public void run() {
         while (getFlag()) {
-            Order order = generateOrder();
-            producer(order);
+            producer();
         }
     }
 
@@ -30,7 +29,7 @@ public class Customers implements Producer<Order> {
     }
 
     @Override
-    public void producer(Order order) {
+    public void producer() {
         while (orderQueue.isFull()) {
             try {
                 orderQueue.waitOnFull();
@@ -41,6 +40,7 @@ public class Customers implements Producer<Order> {
         if (!getFlag()) {
             return;
         }
+        Order order = generateOrder();
         orderQueue.add(order);
         orderQueue.notifyAllForEmpty();
         try {
