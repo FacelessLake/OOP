@@ -54,10 +54,14 @@ public class DataQueue {
     }
 
     public boolean isFull() {
-        return queue.size() == maxSize;
+        synchronized (queue) {
+            return queue.size() == maxSize;
+        }
     }
 
     public boolean isEmpty() {
-        return queue.isEmpty();
+        synchronized (queue) {
+            return queue.isEmpty();
+        }
     }
 }

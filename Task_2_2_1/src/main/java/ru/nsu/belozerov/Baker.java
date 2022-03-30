@@ -71,6 +71,9 @@ public class Baker implements Consumer, Producer {
     @Override
     public void producer() {
         while (deliveryQueue.isFull()) {
+            if (!getFlag()) {
+                return;
+            }
             try {
                 deliveryQueue.waitOnFull();
             } catch (InterruptedException e) {
@@ -86,7 +89,7 @@ public class Baker implements Consumer, Producer {
         deliveryQueue.notifyAllForEmpty();
         try {
             Thread.sleep(random.nextInt(processingTime));
-        } catch (InterruptedException ignored) {
+        } catch (InterruptedException e) {
         }
     }
 
