@@ -2,6 +2,9 @@ package ru.nsu.belozerov;
 
 import java.util.Random;
 
+/**
+ * Generator of orders for pizzeria
+ */
 public class Customers implements Producer {
     public final DataQueue orderQueue;
     private int orderCounter;
@@ -11,12 +14,20 @@ public class Customers implements Producer {
     private final Random random = new Random();
     private int processingTime = 0;
 
+    /**
+     * Customers act as producers of orders here
+     *
+     * @param orderQueue - the queue of orders received from customers
+     */
     public Customers(DataQueue orderQueue) {
         orderProduceStatus = "Processing";
         this.orderQueue = orderQueue;
         runFlag = true;
     }
 
+    /**
+     * Launch the order-generating process
+     */
     @Override
     public void run() {
         while (getFlag()) {
@@ -24,10 +35,18 @@ public class Customers implements Producer {
         }
     }
 
+    /**
+     * This method allows getting flag indicating whether the program is running or not.
+     *
+     * @return the flag
+     */
     public boolean getFlag() {
         return runFlag;
     }
 
+    /**
+     * The producer process itself
+     */
     @Override
     public void producer() {
         while (orderQueue.isFull()) {
@@ -49,6 +68,11 @@ public class Customers implements Producer {
         }
     }
 
+    /**
+     * This method creates new Order exemplar, marking it as Processing one
+     *
+     * @return order with appropriate number and status
+     */
     public Order generateOrder() {
         Order order = new Order();
         orderCounter++;
@@ -58,15 +82,29 @@ public class Customers implements Producer {
         return order;
     }
 
+    /**
+     * Allows changing the delay between making new orders
+     *
+     * @param time - delay
+     */
     public void changeProcessingTime(int time) {
         processingTime = time;
     }
 
+    /**
+     * This method can be used to change the status of an order
+     *
+     * @param order  - the order you want to change
+     * @param status - the new status you want to set
+     */
     public void changeOrderStatus(Order order, String status) {
         order.setOrderStatus(status);
         System.out.println("Order[" + order.getOrderNumber() + "] is " + status);
     }
 
+    /**
+     * Stops producing new pizzas
+     */
     @Override
     public void stopProduce() {
         runFlag = false;
