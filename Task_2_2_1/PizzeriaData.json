@@ -1,0 +1,38 @@
+{
+  "bakersAmount": 5,
+  "deliverersAmount": 3,
+  "storageSize": 20,
+  "ordersDelay": 5000,
+
+  "bakers": [
+    {
+      "cookingTime": 1000
+    },
+    {
+      "cookingTime": 2000
+    },
+    {
+      "cookingTime": 3000
+    },
+    {
+      "cookingTime": 4000
+    },
+    {
+      "cookingTime": 5000
+    }
+  ],
+  "deliverers": [
+    {
+      "deliveryTime": 20000,
+      "trunkSize": 2
+    },
+    {
+      "deliveryTime": 10000,
+      "trunkSize": 3
+    },
+    {
+      "deliveryTime": 15000,
+      "trunkSize": 4
+    }
+  ]
+}

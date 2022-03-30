@@ -1,8 +1,15 @@
 package ru.nsu.belozerov;
 
+import ru.nsu.belozerov.json.JsonHandler;
+import ru.nsu.belozerov.json.JsonPizzeria;
+
+import java.io.IOException;
+
 public class Main {
-    public static void main(String[] args) throws InterruptedException {
-        Pizzeria pizzeria = new Pizzeria(5, new int[]{1000, 2 * 1000, 3 * 1000, 4 * 1000, 5 * 1000}, 3, new int[]{20 * 1000, 10 * 1000, 15 * 1000}, 20, new int[]{2, 3, 4}, 5 * 1000);
+    public static void main(String[] args) throws InterruptedException, IOException {
+        JsonHandler handler = new JsonHandler();
+        JsonPizzeria jp = handler.jsonHandle();
+        Pizzeria pizzeria = new Pizzeria(jp.getBakersAmount(), jp.getBakersSpeeds(), jp.getDeliverersAmount(), jp.getDeliverersSpeeds(), jp.getStorageSize(), jp.getTrunkSizes(), jp.getOrdersDelay());
         pizzeria.pizzeriaStart();
         Thread.sleep(1000 * 60);
         pizzeria.pizzeriaStop();
