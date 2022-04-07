@@ -45,19 +45,23 @@ public class DeliveryGuy implements Consumer {
     @SuppressWarnings("BusyWait")
     @Override
     public void consumer() {
-        if (deliveryQueue.isEmpty()) {
-            try {
-                deliveryQueue.waitOnEmpty();
-            } catch (InterruptedException ignored) {
-            }
-        }
-        if (!runFlag) {
-            return;
-        }
         for (int i = 0; i < trunkSize; i++) {
+            while (deliveryQueue.isEmpty()) {
+                if (!runFlag) {
+                    return;
+                }
+                try {
+                    deliveryQueue.waitOnEmpty();
+                } catch (InterruptedException ignored) {
+                }
+            }
+            if (!runFlag) {
+                return;
+            }
             if (!deliveryQueue.isEmpty()) {
                 Order order = deliveryQueue.remove();
                 trunk.add(order);
+                deliveryQueue.notifyAllForFull();
             }
         }
         while (!trunk.isEmpty()) {
@@ -66,7 +70,6 @@ public class DeliveryGuy implements Consumer {
             } catch (InterruptedException ignored) {
             }
             changeOrderStatus(trunk.remove(), orderConsumeStatus);
-            deliveryQueue.notifyAllForFull();
         }
     }
 

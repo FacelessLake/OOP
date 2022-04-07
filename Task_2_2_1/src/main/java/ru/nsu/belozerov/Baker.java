@@ -47,7 +47,10 @@ public class Baker implements Consumer, Producer {
      */
     @Override
     public void consumer() {
-        if (orderQueue.isEmpty()) {
+        while (orderQueue.isEmpty()) {
+            if (!runFlag) {
+                return;
+            }
             try {
                 orderQueue.waitOnEmpty();
             } catch (InterruptedException ignored) {
@@ -59,10 +62,6 @@ public class Baker implements Consumer, Producer {
         Order order = orderQueue.remove();
         deliveryCounter = order.getOrderNumber();
         orderQueue.notifyAllForFull();
-        try {
-            Thread.sleep(random.nextInt(processingTime));
-        } catch (InterruptedException ignored) {
-        }
     }
 
     /**
@@ -115,13 +114,13 @@ public class Baker implements Consumer, Producer {
             return;
         }
         Order delivery = generateDelivery();
-        changeOrderStatus(delivery, orderProduceStatus);
-        deliveryQueue.add(delivery);
-        deliveryQueue.notifyAllForEmpty();
         try {
             Thread.sleep(random.nextInt(processingTime));
         } catch (InterruptedException ignored) {
         }
+        changeOrderStatus(delivery, orderProduceStatus);
+        deliveryQueue.add(delivery);
+        deliveryQueue.notifyAllForEmpty();
     }
 
     /**
