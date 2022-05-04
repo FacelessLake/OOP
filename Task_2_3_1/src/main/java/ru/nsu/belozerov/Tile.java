@@ -5,15 +5,17 @@ public class Tile {
     private int row;
     private int column;
     private int size;
+    private Directions direction;
+    private Directions rotation;
 
-    public Tile(int row, int column, int size) {
+    public Tile(int column, int row,  int size) {
         type = TileType.EMPTY;
         this.column = column;
         this.row = row;
         this.size = size;
     }
 
-    public Tile(int row, int column, int size, TileType type) {
+    public Tile(int column, int row,  int size, TileType type) {
         this.type = type;
         this.column = column;
         this.row = row;
@@ -44,8 +46,24 @@ public class Tile {
         this.row = row;
     }
 
-    public void setCoordinates(int row, int line) {
-        this.column = line;
+    public void setDirection(Directions direction) {
+        this.direction = direction;
+    }
+
+    public Directions getDirection() {
+        return direction;
+    }
+
+    public void setRotation(Directions rotation) {
+        this.rotation = rotation;
+    }
+
+    public Directions getRotation() {
+        return rotation;
+    }
+
+    public void setCoordinates(int column, int row) {
+        this.column = column;
         this.row = row;
     }
 }

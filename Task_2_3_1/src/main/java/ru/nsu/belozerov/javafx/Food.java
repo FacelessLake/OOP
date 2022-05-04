@@ -4,22 +4,22 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import ru.nsu.belozerov.*;
 
+import java.util.Random;
+
 public class Food {
     private final Field field;
     private final Image foodImage = new Image("food1.png");
+    private final Random random = new Random();
 
     public Food(Field field) {
         this.field = field;
     }
 
-    public void createFood(GraphicsContext gc) {
-        while (true) {
-            Tile foodTile = new Tile((int) (Math.random() * field.getWidth()) / field.getTileSize(),
-                    (int) (Math.random() * field.getHeight()) / field.getTileSize(), field.getTileSize(), TileType.FOOD);
-            if (field.getTile(foodTile.getColumn(), foodTile.getRow()).getType() == TileType.EMPTY) {
-                gc.drawImage(foodImage, foodTile.getColumn(), foodTile.getRow());
-                break;
-            }
-        }
+    public Tile createFood() {
+        return new Tile(random.nextInt(field.getWidth()), random.nextInt(field.getHeight()), field.getTileSize(), TileType.FOOD);
+    }
+
+    public Image getFoodImage() {
+        return foodImage;
     }
 }
