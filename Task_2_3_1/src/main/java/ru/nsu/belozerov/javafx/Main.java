@@ -67,10 +67,7 @@ public class Main extends Application {
                 });
 
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        Font theFont = Font.font("Helvetica", FontWeight.BOLD, 24);
-        gc.setFont(theFont);
-        gc.setStroke(Color.BLACK);
-        gc.setLineWidth(1);
+
 
         AnimatedImage animatedHead = snake.makeMainSnake();
         new AnimationTimer() {
@@ -81,7 +78,7 @@ public class Main extends Application {
                     throw new RuntimeException(e);
                 }
                 foodCheck();
-                paintTheField(gc, Color.web("AAD751"), Color.web("A2D149"), Color.BROWN); //если вынести - будет мем
+                paintTheField(gc, Color.web("AAD751"), Color.web("A2D149")); //если вынести - будет мем
                 gc.drawImage(food.getFoodImage(), foodTile.getColumn() * SQUARE_SIZE, foodTile.getRow() * SQUARE_SIZE);
 
                 // game logic
@@ -116,6 +113,7 @@ public class Main extends Application {
                 if (changeDirection != null) {
                     snake.move(changeDirection);
                 }
+                consumeFood();
 
                 // calculate time since last update.
                 double elapsedTime = (currentNanoTime - lastNanoTime.value) / 200000000.0;
@@ -126,6 +124,11 @@ public class Main extends Application {
                         snake.getHead().getRow() * SQUARE_SIZE);
                 snake.drawMainSnake(gc);
 
+                gc.setFill(Color.WHITE);
+                gc.setStroke(Color.BLACK);
+                gc.setLineWidth(1);
+                Font theFont = Font.font("Helvetica", FontWeight.BOLD, 24);
+                gc.setFont(theFont);
                 String pointsText = "Points: " + (score.value);
                 gc.fillText(pointsText, WINDOW_HEIGHT_PIXELS >> 5, SQUARE_SIZE);
                 gc.strokeText(pointsText, WINDOW_HEIGHT_PIXELS >> 5, SQUARE_SIZE);
@@ -135,7 +138,7 @@ public class Main extends Application {
         theStage.show();
     }
 
-    private void paintTheField(GraphicsContext gc, Color color1, Color color2, Color color3) {
+    private void paintTheField(GraphicsContext gc, Color color1, Color color2) {
         for (int i = 0; i < field.getWidth(); i++) {
             for (int j = 0; j < field.getHeight(); j++) {
                 if ((i + j) % 2 == 0) {
@@ -143,10 +146,10 @@ public class Main extends Application {
                 } else {
                     gc.setFill(color2);
                 }
-                if (i == 0 || j == 0 || i == WINDOW_WIDTH_SQUARES-1 || j == WINDOW_HEIGHT_SQUARES-1){
-                    gc.setFill(color3);
+                if (i == 0 || j == 0 || i == WINDOW_WIDTH_SQUARES - 1 || j == WINDOW_HEIGHT_SQUARES - 1) {
+                    gc.setFill(Color.FIREBRICK);
                 }
-                    gc.fillRect(i * SQUARE_SIZE, j * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE);
+                gc.fillRect(i * SQUARE_SIZE, j * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE);
             }
         }
     }
@@ -161,6 +164,14 @@ public class Main extends Application {
                 }
             }
             foodFlag = true;
+        }
+    }
+
+    private void consumeFood(){
+        if(foodTile.getColumn() == snake.getHead().getColumn() & foodTile.getRow() == snake.getHead().getRow()){
+            snake.grow();
+            foodFlag = false;
+            score.value++;
         }
     }
 
