@@ -18,6 +18,9 @@ public class Field {
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 field[i][j] = new Tile(i, j, tileSize, TileType.EMPTY);
+                if (i == 0 || j == 0 || i == width - 1 || j == height - 1) {
+                    field[i][j] = new Tile(i, j, tileSize, TileType.WALL);
+                }
             }
         }
     }
