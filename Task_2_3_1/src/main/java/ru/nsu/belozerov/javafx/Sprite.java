@@ -38,8 +38,8 @@ public class Sprite
 
     public void setAnimatedImage(AnimatedImage ai) {
         animatedImage = ai;
-        //width = ai.getFirstFrame().getWidth();
-        //height = ai.getFirstFrame().getHeight();
+        width = ai.getFrames()[0].getWidth();
+        height = ai.getFrames()[0].getHeight();
     }
 
     public void setPosition(double x, double y)
