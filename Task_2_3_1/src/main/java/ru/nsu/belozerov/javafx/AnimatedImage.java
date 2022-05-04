@@ -5,7 +5,7 @@ import javafx.scene.image.Image;
 public class AnimatedImage
 {
     // assumes animation loops,
-    //  each image displays for equal time
+    // each image displays for equal time
     private Image[] frames;
     private double duration;
     public AnimatedImage(Image[] frames, double duration){
