@@ -6,8 +6,12 @@ public class AnimatedImage
 {
     // assumes animation loops,
     //  each image displays for equal time
-    public Image[] frames;
-    public double duration;
+    private Image[] frames;
+    private double duration;
+    public AnimatedImage(Image[] frames, double duration){
+        this.frames = frames;
+        this.duration = duration;
+    }
 
     public Image getFrame(double time)
     {
@@ -15,7 +19,19 @@ public class AnimatedImage
         return frames[index];
     }
 
-    public Image getFirstFrame(){
-        return frames[0];
+    public Image[] getFrames() {
+        return frames;
+    }
+
+    public double getDuration() {
+        return duration;
+    }
+
+    public void setFrames(Image[] frames) {
+        this.frames = frames;
+    }
+
+    public void setDuration(double duration) {
+        this.duration = duration;
     }
 }

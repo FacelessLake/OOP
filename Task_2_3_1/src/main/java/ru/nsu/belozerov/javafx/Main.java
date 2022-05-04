@@ -77,8 +77,7 @@ public class Main extends Application {
         gc.setStroke(Color.BLACK);
         gc.setLineWidth(1);
 
-        AnimatedImage head = new AnimatedImage();
-        Image[] headRight = new Image[3];
+                Image[] headRight = new Image[3];
         Image[] headDown = new Image[3];
         Image[] headUp = new Image[3];
         Image[] headLeft = new Image[3];
@@ -89,8 +88,7 @@ public class Main extends Application {
             headLeft[i] = new Image("snake_left" + (i + 1) + ".png");
         }
 
-        head.frames = headRight;
-        head.duration = 0.00009;
+        AnimatedImage head = new AnimatedImage(headRight,0.00009);
         snakeSprite.setAnimatedImage(head);
         snakeSprite.setPosition((WINDOW_WIDTH_SQUARES >> 1) * SQUARE_SIZE, (WINDOW_HEIGHT_SQUARES >> 1) * SQUARE_SIZE);
 
@@ -121,27 +119,28 @@ public class Main extends Application {
                     changeDirection = Directions.DOWN;
                 }
 
-                if (changeDirection != null & snakeSprite.getBoundary().getMaxX() % SQUARE_SIZE < 5 & snakeSprite.getBoundary().getMaxY() % SQUARE_SIZE < 5) {
+                if (changeDirection != null & snakeSprite.getBoundary().getMinX() % SQUARE_SIZE < 5
+                        & snakeSprite.getBoundary().getMinY() % SQUARE_SIZE < 5) {
                     switch (changeDirection) {
                         case UP -> {
                             snakeSprite.setVelocity(0, -SQUARE_SIZE);
                             changeDirection = null;
-                            head.frames = headUp;
+                            head.setFrames(headUp);
                         }
                         case RIGHT -> {
                             snakeSprite.setVelocity(SQUARE_SIZE, 0);
                             changeDirection = null;
-                            head.frames = headRight;
+                            head.setFrames(headRight);
                         }
                         case DOWN -> {
                             snakeSprite.setVelocity(0, SQUARE_SIZE);
                             changeDirection = null;
-                            head.frames = headDown;
+                            head.setFrames(headDown);
                         }
                         case LEFT -> {
                             snakeSprite.setVelocity(-SQUARE_SIZE, 0);
                             changeDirection = null;
-                            head.frames = headLeft;
+                            head.setFrames(headLeft);
                         }
                     }
                 }
