@@ -3,18 +3,21 @@ package ru.nsu.belozerov;
 public class Tile {
     private TileType type;
     private int row;
-    private int line;
+    private int column;
+    private int size;
 
-    public Tile(int row, int line) {
+    public Tile(int row, int column, int size) {
         type = TileType.EMPTY;
-        this.line = line;
+        this.column = column;
         this.row = row;
+        this.size = size;
     }
 
-    public Tile(int row, int line, TileType type) {
+    public Tile(int row, int column, int size, TileType type) {
         this.type = type;
-        this.line = line;
+        this.column = column;
         this.row = row;
+        this.size = size;
     }
 
     public void setType(TileType type) {
@@ -25,12 +28,12 @@ public class Tile {
         return type;
     }
 
-    public int getLine() {
-        return line;
+    public int getColumn() {
+        return column;
     }
 
-    public void setLine(int line) {
-        this.line = line;
+    public void setColumn(int column) {
+        this.column = column;
     }
 
     public int getRow() {
@@ -42,7 +45,7 @@ public class Tile {
     }
 
     public void setCoordinates(int row, int line) {
-        this.line = line;
+        this.column = line;
         this.row = row;
     }
 }

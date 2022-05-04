@@ -1,8 +1,10 @@
-module com.example.task_2_3_1 {
+module ru.nsu.belozerov {
     requires javafx.controls;
     requires javafx.fxml;
 
 
-    opens com.example.task_2_3_1 to javafx.fxml;
-    exports com.example.task_2_3_1;
+    opens ru.nsu.belozerov to javafx.fxml;
+    exports ru.nsu.belozerov;
+    exports ru.nsu.belozerov.javafx;
+    opens ru.nsu.belozerov.javafx to javafx.fxml;
 }
