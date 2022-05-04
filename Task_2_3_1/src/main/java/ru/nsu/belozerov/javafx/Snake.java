@@ -3,6 +3,7 @@ package ru.nsu.belozerov.javafx;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import ru.nsu.belozerov.Directions;
+import ru.nsu.belozerov.Field;
 import ru.nsu.belozerov.Tile;
 import ru.nsu.belozerov.TileType;
 
@@ -77,7 +78,7 @@ public class Snake {
         return headImage;
     }
 
-    public void drawMainSnake(GraphicsContext gc) {
+    public Field drawMainSnake(GraphicsContext gc, Field field) {
         for (Tile tile : body) {
             Image bodyImage = new Image("body_hor.png");
             if (tile.getType() == TileType.SNAKE_BODY) {
@@ -127,7 +128,9 @@ public class Snake {
             }
             gc.drawImage(bodyImage, tile.getColumn() * tileSize,
                     tile.getRow() * tileSize);
+            field.setTile(tile);
         }
+        return field;
     }
 
     public void move(Directions changeDirection) {
@@ -135,29 +138,42 @@ public class Snake {
         bodyTile.setRotation(bodyTile.getDirection());
         bodyTile.setDirection(changeDirection);
         body.add(bodyTile);
+        int headRow = head.getRow();
+        int headColumn = head.getColumn();
+        Image[] frames = new Image[3];
         switch (changeDirection) {
             case UP -> {
-                head.setRow(head.getRow() - 1);
-                headImage.setFrames(headUp);
+                headRow = head.getRow() - 1;
+                frames = headUp;
             }
             case RIGHT -> {
-                head.setColumn(head.getColumn() + 1);
-                headImage.setFrames(headRight);
+                headColumn = head.getColumn() + 1;
+                frames = headRight;
             }
             case DOWN -> {
-                head.setRow(head.getRow() + 1);
-                headImage.setFrames(headDown);
+                headRow = head.getRow() + 1;
+                frames = headDown;
             }
             case LEFT -> {
-                head.setColumn(head.getColumn() - 1);
-                headImage.setFrames(headLeft);
+                headColumn = head.getColumn() - 1;
+                frames = headLeft;
             }
         }
+        //bumpInto();
+        head.setRow(headRow);
+        head.setColumn(headColumn);
+        headImage.setFrames(frames);
         if (body.size() > length) {
             body.remove(0);
             body.get(0).setType(TileType.SNAKE_TAIL);
         }
     }
+
+//    public void bumpInto() {
+//        if () {
+//
+//        }
+//    }
 
     public int getRow() {
         return row;
