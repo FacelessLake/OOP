@@ -95,10 +95,10 @@ public class Snake {
                     case DOWN -> {
                         bodyImage = new Image("body_vert.png");
                         if (tile.getRotation() == Directions.RIGHT) {
-                            bodyImage = new Image("rotate-3.png");
+                            bodyImage = new Image("rotate-2.png");
                         }
                         if (tile.getRotation() == Directions.LEFT) {
-                            bodyImage = new Image("rotate-2.png");
+                            bodyImage = new Image("rotate-3.png");
                         }
                     }
                     case RIGHT -> {
@@ -133,9 +133,10 @@ public class Snake {
         return field;
     }
 
-    public void move(Directions changeDirection) {
-        Tile bodyTile = new Tile(head.getColumn(), head.getRow(), tileSize, TileType.SNAKE_BODY);
-        bodyTile.setRotation(bodyTile.getDirection());
+    public Field move(Directions changeDirection, Field field) {
+        Tile bodyTile = field.getTile(head.getColumn(), head.getRow());
+        bodyTile.setType(TileType.SNAKE_BODY);
+        bodyTile.setRotation(direction);
         bodyTile.setDirection(changeDirection);
         body.add(bodyTile);
         int headRow = head.getRow();
@@ -143,37 +144,37 @@ public class Snake {
         Image[] frames = new Image[3];
         switch (changeDirection) {
             case UP -> {
+                direction = Directions.UP;
                 headRow = head.getRow() - 1;
                 frames = headUp;
             }
             case RIGHT -> {
+                direction = Directions.RIGHT;
                 headColumn = head.getColumn() + 1;
                 frames = headRight;
             }
             case DOWN -> {
+                direction = Directions.DOWN;
                 headRow = head.getRow() + 1;
                 frames = headDown;
             }
             case LEFT -> {
+                direction = Directions.LEFT;
                 headColumn = head.getColumn() - 1;
                 frames = headLeft;
             }
         }
-        //bumpInto();
         head.setRow(headRow);
         head.setColumn(headColumn);
         headImage.setFrames(frames);
         if (body.size() > length) {
-            body.remove(0);
+            Tile tile = body.remove(0);
+            tile.setType(TileType.EMPTY);
+            tile.setRotation(null);
             body.get(0).setType(TileType.SNAKE_TAIL);
         }
+        return field;
     }
-
-//    public void bumpInto() {
-//        if () {
-//
-//        }
-//    }
 
     public int getRow() {
         return row;
@@ -208,6 +209,6 @@ public class Snake {
     }
 
     public void grow() {
-        length++;
+        length+=3;
     }
 }

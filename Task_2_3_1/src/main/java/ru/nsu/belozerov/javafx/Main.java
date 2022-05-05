@@ -22,11 +22,11 @@ import ru.nsu.belozerov.TileType;
 
 
 public class Main extends Application {
-    private final int SQUARE_SIZE = 50;
+    private final int SQUARE_SIZE = 40;
     private final int WINDOW_WIDTH_PIXELS = 1000;
     private final int WINDOW_HEIGHT_PIXELS = 1000;
-    private final int WINDOW_WIDTH_SQUARES = 20;
-    private final int WINDOW_HEIGHT_SQUARES = 20;
+    private final int WINDOW_WIDTH_SQUARES = 25;
+    private final int WINDOW_HEIGHT_SQUARES = 25;
 
     private Field field = new Field(WINDOW_WIDTH_SQUARES, WINDOW_HEIGHT_SQUARES, SQUARE_SIZE);
     private final Snake snake = new Snake(WINDOW_HEIGHT_SQUARES / 2,
@@ -66,9 +66,10 @@ public class Main extends Application {
 
         AnimatedImage animatedHead = snake.makeMainSnake();
         timer = new AnimationTimer() {
+            int speedUp = 0;
             public void handle(long currentNanoTime) {
                 try {
-                    Thread.sleep(250);
+                    Thread.sleep(250 - speedUp);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
@@ -80,25 +81,21 @@ public class Main extends Application {
                 switch (input) {
                     case "LEFT" -> {
                         if (snake.getDirection() != Directions.RIGHT) {
-                            snake.setDirection(Directions.LEFT);
                             changeDirection = Directions.LEFT;
                         }
                     }
                     case "RIGHT" -> {
                         if (snake.getDirection() != Directions.LEFT) {
-                            snake.setDirection(Directions.RIGHT);
                             changeDirection = Directions.RIGHT;
                         }
                     }
                     case "UP" -> {
                         if (snake.getDirection() != Directions.DOWN) {
-                            snake.setDirection(Directions.UP);
                             changeDirection = Directions.UP;
                         }
                     }
                     case "DOWN" -> {
                         if (snake.getDirection() != Directions.UP) {
-                            snake.setDirection(Directions.DOWN);
                             changeDirection = Directions.DOWN;
 
                         }
@@ -106,11 +103,17 @@ public class Main extends Application {
                 }
 
                 if (changeDirection != null) {
-                    snake.move(changeDirection);
+                    field = snake.move(changeDirection, field);
                 }
-                consumeFood();
+                if(consumeFood()){
+                    speedUp+=15;
+                }
+
                 if (bumpInto()) {
                     gameOver(gc);
+                }
+                if (score.value == 15){
+                    gameWon(gc);
                 }
 
                 // calculate time since last update.
@@ -165,17 +168,20 @@ public class Main extends Application {
         }
     }
 
-    private void consumeFood() {
+    private boolean consumeFood() {
         if (foodTile.getColumn() == snake.getHead().getColumn() & foodTile.getRow() == snake.getHead().getRow()) {
             snake.grow();
             foodFlag = false;
             score.value++;
+            return true;
         }
+        return false;
     }
 
     public boolean bumpInto() {
         Tile tile = field.getTile(snake.getHead().getColumn(), snake.getHead().getRow());
-        return (tile.getType() == TileType.WALL || tile.getType() == TileType.SNAKE_BODY);
+        return (tile.getType() == TileType.WALL || tile.getType() == TileType.SNAKE_BODY
+                || tile.getType() == TileType.SNAKE_TAIL);
     }
 
     public void gameOver(GraphicsContext gc) {
@@ -189,6 +195,19 @@ public class Main extends Application {
         gc.fillText(Text, WINDOW_WIDTH_PIXELS >> 2, WINDOW_HEIGHT_PIXELS >> 2);
         gc.strokeText(Text, WINDOW_WIDTH_PIXELS >> 2, WINDOW_HEIGHT_PIXELS >> 2);
         timer.stop();
+    }
+
+    public void gameWon(GraphicsContext gc){
+            paintTheField(gc, Color.YELLOW, Color.ORANGE);
+            gc.setFill(Color.RED);
+            gc.setStroke(Color.BLACK);
+            gc.setLineWidth(1);
+            Font theFont = Font.font("Helvetica", FontWeight.BOLD, 60);
+            gc.setFont(theFont);
+            String Text = "     YOU WON";
+            gc.fillText(Text, WINDOW_WIDTH_PIXELS >> 2, WINDOW_HEIGHT_PIXELS >> 2);
+            gc.strokeText(Text, WINDOW_WIDTH_PIXELS >> 2, WINDOW_HEIGHT_PIXELS >> 2);
+            timer.stop();
     }
 
     public static Image[] getImageRow(int frames, int width, int height, String pathFile) {
