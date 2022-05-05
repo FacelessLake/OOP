@@ -2,7 +2,6 @@ package ru.nsu.belozerov.javafx;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -10,6 +9,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -32,16 +32,15 @@ public class Main extends Application {
     private final Snake snake = new Snake(WINDOW_HEIGHT_SQUARES / 2,
             WINDOW_WIDTH_SQUARES / 2, Directions.RIGHT, SQUARE_SIZE);
 
-    private String input = "";
-
     Tile foodTile;
     private final Food food = new Food(field);
     private boolean foodFlag = false;
 
-    LongValue lastNanoTime = new LongValue(System.nanoTime());
-    IntValue score = new IntValue(0);
-    Directions changeDirection = null;
     AnimationTimer timer;
+    private String input = "";
+    IntValue score = new IntValue(0);
+    Canvas canvas1;
+    Canvas canvas2;
 
     public static void main(String[] args) {
         launch(args);
@@ -51,22 +50,25 @@ public class Main extends Application {
     public void start(Stage theStage) {
         theStage.setTitle("Snake The Game");
 
-        Group root = new Group();
+        canvas1 = new Canvas(WINDOW_WIDTH_PIXELS, WINDOW_HEIGHT_PIXELS);
+        canvas2 = new Canvas(WINDOW_WIDTH_PIXELS, WINDOW_HEIGHT_PIXELS);
+        Pane root = new Pane();
+        root.getChildren().addAll(canvas1, canvas2);
+        canvas2.toFront();
         Scene theScene = new Scene(root);
         theStage.setScene(theScene);
-
-        Canvas canvas = new Canvas(WINDOW_WIDTH_PIXELS, WINDOW_HEIGHT_PIXELS);
-        root.getChildren().add(canvas);
 
         theScene.setOnKeyPressed(
                 e -> input = e.getCode().toString());
 
-        GraphicsContext gc = canvas.getGraphicsContext2D();
+        GraphicsContext gc = canvas1.getGraphicsContext2D();
 
-
-        AnimatedImage animatedHead = snake.makeMainSnake();
         timer = new AnimationTimer() {
             int speedUp = 0;
+            final LongValue lastNanoTime = new LongValue(System.nanoTime());
+            Directions changeDirection = null;
+            final AnimatedImage animatedHead = snake.makeMainSnake();
+
             public void handle(long currentNanoTime) {
                 try {
                     Thread.sleep(250 - speedUp);
@@ -97,7 +99,6 @@ public class Main extends Application {
                     case "DOWN" -> {
                         if (snake.getDirection() != Directions.UP) {
                             changeDirection = Directions.DOWN;
-
                         }
                     }
                 }
@@ -105,14 +106,14 @@ public class Main extends Application {
                 if (changeDirection != null) {
                     field = snake.move(changeDirection, field);
                 }
-                if(consumeFood()){
-                    speedUp+=15;
+                if (consumeFood()) {
+                    speedUp += 15;
                 }
 
                 if (bumpInto()) {
                     gameOver(gc);
                 }
-                if (score.value == 15){
+                if (score.value == 15) {
                     gameWon(gc);
                 }
 
@@ -121,9 +122,9 @@ public class Main extends Application {
                 lastNanoTime.value = currentNanoTime;
 
                 // render
+                field = snake.drawMainSnake(gc, field);
                 gc.drawImage(animatedHead.getFrame(elapsedTime), snake.getHead().getColumn() * SQUARE_SIZE,
                         snake.getHead().getRow() * SQUARE_SIZE);
-                field = snake.drawMainSnake(gc, field);
 
                 gc.setFill(Color.WHITE);
                 gc.setStroke(Color.BLACK);
@@ -186,28 +187,30 @@ public class Main extends Application {
 
     public void gameOver(GraphicsContext gc) {
         paintTheField(gc, Color.BLACK, Color.BLACK);
-        gc.setFill(Color.RED);
-        gc.setStroke(Color.BLACK);
-        gc.setLineWidth(1);
+        GraphicsContext gc2 = canvas2.getGraphicsContext2D();
+        gc2.setFill(Color.RED);
+        gc2.setStroke(Color.BLACK);
+        gc2.setLineWidth(1);
         Font theFont = Font.font("Helvetica", FontWeight.BOLD, 60);
-        gc.setFont(theFont);
+        gc2.setFont(theFont);
         String Text = "     GAME OVER";
-        gc.fillText(Text, WINDOW_WIDTH_PIXELS >> 2, WINDOW_HEIGHT_PIXELS >> 2);
-        gc.strokeText(Text, WINDOW_WIDTH_PIXELS >> 2, WINDOW_HEIGHT_PIXELS >> 2);
+        gc2.fillText(Text, WINDOW_WIDTH_PIXELS >> 2, WINDOW_HEIGHT_PIXELS >> 2);
+        gc2.strokeText(Text, WINDOW_WIDTH_PIXELS >> 2, WINDOW_HEIGHT_PIXELS >> 2);
         timer.stop();
     }
 
-    public void gameWon(GraphicsContext gc){
-            paintTheField(gc, Color.YELLOW, Color.ORANGE);
-            gc.setFill(Color.RED);
-            gc.setStroke(Color.BLACK);
-            gc.setLineWidth(1);
-            Font theFont = Font.font("Helvetica", FontWeight.BOLD, 60);
-            gc.setFont(theFont);
-            String Text = "     YOU WON";
-            gc.fillText(Text, WINDOW_WIDTH_PIXELS >> 2, WINDOW_HEIGHT_PIXELS >> 2);
-            gc.strokeText(Text, WINDOW_WIDTH_PIXELS >> 2, WINDOW_HEIGHT_PIXELS >> 2);
-            timer.stop();
+    public void gameWon(GraphicsContext gc) {
+        paintTheField(gc, Color.web("FFCA33"), Color.web("EAB726"));
+        GraphicsContext gc2 = canvas2.getGraphicsContext2D();
+        gc2.setFill(Color.RED);
+        gc2.setStroke(Color.BLACK);
+        gc2.setLineWidth(1);
+        Font theFont = Font.font("Helvetica", FontWeight.BOLD, 60);
+        gc2.setFont(theFont);
+        String Text = "     YOU WON";
+        gc2.fillText(Text, WINDOW_WIDTH_PIXELS >> 2, WINDOW_HEIGHT_PIXELS >> 2);
+        gc2.strokeText(Text, WINDOW_WIDTH_PIXELS >> 2, WINDOW_HEIGHT_PIXELS >> 2);
+        timer.stop();
     }
 
     public static Image[] getImageRow(int frames, int width, int height, String pathFile) {

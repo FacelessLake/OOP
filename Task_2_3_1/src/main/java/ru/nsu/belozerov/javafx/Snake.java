@@ -29,7 +29,7 @@ public class Snake {
         this.row = row;
         this.tileSize = tileSize;
         this.direction = direction;
-        length = 3;
+        length = 2;
     }
 
     public AnimatedImage makeMainSnake() {
@@ -69,10 +69,10 @@ public class Snake {
             }
         }
         head = new Tile(column, row, tileSize, TileType.SNAKE_HEAD);
-        Tile tileBody = new Tile(columnBody, rowBody, tileSize, TileType.SNAKE_BODY);
+        Tile tileBody = new Tile(columnTale, rowBody, tileSize, TileType.SNAKE_TAIL);
         tileBody.setDirection(direction);
         body.add(tileBody);
-        Tile tileTale = new Tile(columnTale, rowTale, tileSize, TileType.SNAKE_TAIL);
+        Tile tileTale = new Tile(columnBody, rowTale, tileSize, TileType.SNAKE_BODY);
         tileTale.setDirection(direction);
         body.add(tileTale);
         return headImage;
@@ -209,6 +209,6 @@ public class Snake {
     }
 
     public void grow() {
-        length+=3;
+        length += 3;
     }
 }
