@@ -15,7 +15,7 @@ public class Food {
     }
 
     public Tile createFood() {
-        return new Tile(random.nextInt(field.getWidth()), random.nextInt(field.getHeight()), field.getTileSize(), TileType.FOOD);
+        return new Tile(random.nextInt(field.getWidth()), random.nextInt(field.getHeight()), TileType.FOOD);
     }
 
     public Image getFoodImage() {

@@ -15,10 +15,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
-import ru.nsu.belozerov.Directions;
-import ru.nsu.belozerov.Field;
-import ru.nsu.belozerov.Tile;
-import ru.nsu.belozerov.TileType;
+import ru.nsu.belozerov.*;
 
 
 public class Main extends Application {
@@ -28,17 +25,17 @@ public class Main extends Application {
     private final int WINDOW_WIDTH_SQUARES = 25;
     private final int WINDOW_HEIGHT_SQUARES = 25;
 
-    private Field field = new Field(WINDOW_WIDTH_SQUARES, WINDOW_HEIGHT_SQUARES, SQUARE_SIZE);
-    private final Snake snake = new Snake(WINDOW_HEIGHT_SQUARES / 2,
-            WINDOW_WIDTH_SQUARES / 2, Directions.RIGHT, SQUARE_SIZE);
-
+    private final Field field = new Field(WINDOW_WIDTH_SQUARES, WINDOW_HEIGHT_SQUARES, SQUARE_SIZE);
+    private final Snake snake = new Snake(WINDOW_HEIGHT_SQUARES / 2, WINDOW_WIDTH_SQUARES / 2, Directions.RIGHT, field);
+    private final SnakeFX snakeFX = new SnakeFX(SQUARE_SIZE, snake);
     Tile foodTile;
     private final Food food = new Food(field);
     private boolean foodFlag = false;
 
     AnimationTimer timer;
     private String input = "";
-    IntValue score = new IntValue(0);
+    private final int winCondition = 15;
+    Integer score = 0;
     Canvas canvas1;
     Canvas canvas2;
 
@@ -65,13 +62,13 @@ public class Main extends Application {
 
         timer = new AnimationTimer() {
             int speedUp = 0;
-            final LongValue lastNanoTime = new LongValue(System.nanoTime());
+            Long lastNanoTime = System.nanoTime();
             Directions changeDirection = null;
-            final AnimatedImage animatedHead = snake.makeMainSnake();
+            final AnimatedImage animatedHead = snakeFX.makeMainSnake();
 
             public void handle(long currentNanoTime) {
                 try {
-                    Thread.sleep(250 - speedUp);
+                    Thread.sleep(150 - speedUp);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
@@ -104,25 +101,25 @@ public class Main extends Application {
                 }
 
                 if (changeDirection != null) {
-                    field = snake.move(changeDirection, field);
+                    snake.move(changeDirection);
                 }
                 if (consumeFood()) {
-                    speedUp += 15;
+                    speedUp += 10;
                 }
 
                 if (bumpInto()) {
                     gameOver(gc);
                 }
-                if (score.value == 15) {
+                if (score == winCondition) {
                     gameWon(gc);
                 }
 
                 // calculate time since last update.
-                double elapsedTime = (currentNanoTime - lastNanoTime.value) / 200000000.0;
-                lastNanoTime.value = currentNanoTime;
+                double elapsedTime = (currentNanoTime - lastNanoTime) / 200000000.0;
+                lastNanoTime = currentNanoTime;
 
                 // render
-                field = snake.drawMainSnake(gc, field);
+                snakeFX.drawMainSnake(gc, field);
                 gc.drawImage(animatedHead.getFrame(elapsedTime), snake.getHead().getColumn() * SQUARE_SIZE,
                         snake.getHead().getRow() * SQUARE_SIZE);
 
@@ -131,7 +128,7 @@ public class Main extends Application {
                 gc.setLineWidth(1);
                 Font theFont = Font.font("Helvetica", FontWeight.BOLD, 24);
                 gc.setFont(theFont);
-                String pointsText = "Points: " + score.value;
+                String pointsText = "Points: " + score + " / " + winCondition;
                 gc.fillText(pointsText, WINDOW_WIDTH_PIXELS >> 5, SQUARE_SIZE - 10);
                 gc.strokeText(pointsText, WINDOW_WIDTH_PIXELS >> 5, SQUARE_SIZE - 10);
             }
@@ -173,7 +170,7 @@ public class Main extends Application {
         if (foodTile.getColumn() == snake.getHead().getColumn() & foodTile.getRow() == snake.getHead().getRow()) {
             snake.grow();
             foodFlag = false;
-            score.value++;
+            score++;
             return true;
         }
         return false;
@@ -191,9 +188,9 @@ public class Main extends Application {
         gc2.setFill(Color.RED);
         gc2.setStroke(Color.BLACK);
         gc2.setLineWidth(1);
-        Font theFont = Font.font("Forte", FontWeight.BOLD, 60);
+        Font theFont = Font.font("Snap ITC", FontWeight.BOLD, 60);
         gc2.setFont(theFont);
-        String Text = "     GAME OVER";
+        String Text = " GAME OVER";
         gc2.fillText(Text, WINDOW_WIDTH_PIXELS >> 2, WINDOW_HEIGHT_PIXELS >> 2);
         gc2.strokeText(Text, WINDOW_WIDTH_PIXELS >> 2, WINDOW_HEIGHT_PIXELS >> 2);
         timer.stop();
@@ -205,9 +202,9 @@ public class Main extends Application {
         gc2.setFill(Color.RED);
         gc2.setStroke(Color.BLACK);
         gc2.setLineWidth(1);
-        Font theFont = Font.font("Forte", FontWeight.BOLD, 60);
+        Font theFont = Font.font("Snap ITC", FontWeight.BOLD, 60);
         gc2.setFont(theFont);
-        String Text = "     YOU WON";
+        String Text = " YOU WON";
         gc2.fillText(Text, WINDOW_WIDTH_PIXELS >> 2, WINDOW_HEIGHT_PIXELS >> 2);
         gc2.strokeText(Text, WINDOW_WIDTH_PIXELS >> 2, WINDOW_HEIGHT_PIXELS >> 2);
         timer.stop();

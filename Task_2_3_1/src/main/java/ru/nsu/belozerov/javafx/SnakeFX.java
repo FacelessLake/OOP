@@ -2,34 +2,20 @@ package ru.nsu.belozerov.javafx;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import ru.nsu.belozerov.Directions;
-import ru.nsu.belozerov.Field;
-import ru.nsu.belozerov.Tile;
-import ru.nsu.belozerov.TileType;
+import ru.nsu.belozerov.*;
 
-import java.util.ArrayList;
-
-public class Snake {
-    private Directions direction;
-    private int length;
-    private final int tileSize;
-    private final int column;
-    private final int row;
-    private Tile head;
-    private final ArrayList<Tile> body = new ArrayList<>();
-    private AnimatedImage headImage;
+public class SnakeFX {
     private final Image[] headRight = new Image[3];
     private final Image[] headDown = new Image[3];
     private final Image[] headUp = new Image[3];
     private final Image[] headLeft = new Image[3];
+    private final int tileSize;
+    private AnimatedImage headImage;
+    private final Snake snake;
 
-
-    public Snake(int column, int row, Directions direction, int tileSize) {
-        this.column = column;
-        this.row = row;
+    public SnakeFX(int tileSize, Snake snake) {
         this.tileSize = tileSize;
-        this.direction = direction;
-        length = 2;
+        this.snake = snake;
     }
 
     public AnimatedImage makeMainSnake() {
@@ -40,46 +26,54 @@ public class Snake {
             headUp[i] = new Image("snake_up" + (i + 1) + ".png");
             headLeft[i] = new Image("snake_left" + (i + 1) + ".png");
         }
-
+        Directions direction = snake.getDirection();
         double duration = 0.00009;
-        int columnBody = column;
-        int columnTale = column;
-        int rowBody = row;
-        int rowTale = row;
+        int columnBody = snake.getColumn();
+        int columnTale = snake.getColumn();
+        int rowBody = snake.getRow();
+        int rowTale = snake.getRow();
         switch (direction) {
             case UP -> {
                 headImage = new AnimatedImage(headUp, duration);
-                rowBody = row + 1;
-                rowTale = row + 2;
+                rowBody++;
+                rowTale += 2;
             }
             case DOWN -> {
                 headImage = new AnimatedImage(headDown, duration);
-                rowBody = row - 1;
-                rowTale = row - 2;
+                rowBody--;
+                rowTale -= 2;
             }
             case LEFT -> {
                 headImage = new AnimatedImage(headLeft, duration);
-                columnBody = column + 1;
-                columnTale = column + 2;
+                columnBody++;
+                columnTale += 2;
             }
             case RIGHT -> {
                 headImage = new AnimatedImage(headRight, duration);
-                columnBody = column - 1;
-                columnTale = column - 2;
+                columnBody--;
+                columnTale -= 2;
             }
         }
-        head = new Tile(column, row, tileSize, TileType.SNAKE_HEAD);
-        Tile tileBody = new Tile(columnTale, rowBody, tileSize, TileType.SNAKE_TAIL);
+        snake.setHead(new Tile(snake.getColumn(), snake.getRow(), TileType.SNAKE_HEAD)); //??
+        Tile tileBody = new Tile(columnTale, rowBody, TileType.SNAKE_TAIL);
         tileBody.setDirection(direction);
-        body.add(tileBody);
-        Tile tileTale = new Tile(columnBody, rowTale, tileSize, TileType.SNAKE_BODY);
+        snake.getBody().add(tileBody);
+        Tile tileTale = new Tile(columnBody, rowTale, TileType.SNAKE_BODY);
         tileTale.setDirection(direction);
-        body.add(tileTale);
+        snake.getBody().add(tileTale);
         return headImage;
     }
 
-    public Field drawMainSnake(GraphicsContext gc, Field field) {
-        for (Tile tile : body) {
+    public void drawMainSnake(GraphicsContext gc, Field field) {
+        Image[] frames = new Image[3];
+        switch (snake.getDirection()) {
+            case UP -> frames = headUp;
+            case RIGHT -> frames = headRight;
+            case DOWN -> frames = headDown;
+            case LEFT -> frames = headLeft;
+        }
+        headImage.setFrames(frames);
+        for (Tile tile : snake.getBody()) {
             Image bodyImage = new Image("body_hor.png");
             if (tile.getType() == TileType.SNAKE_BODY) {
                 switch (tile.getDirection()) {
@@ -130,85 +124,5 @@ public class Snake {
                     tile.getRow() * tileSize);
             field.setTile(tile);
         }
-        return field;
-    }
-
-    public Field move(Directions changeDirection, Field field) {
-        Tile bodyTile = field.getTile(head.getColumn(), head.getRow());
-        bodyTile.setType(TileType.SNAKE_BODY);
-        bodyTile.setRotation(direction);
-        bodyTile.setDirection(changeDirection);
-        body.add(bodyTile);
-        int headRow = head.getRow();
-        int headColumn = head.getColumn();
-        Image[] frames = new Image[3];
-        switch (changeDirection) {
-            case UP -> {
-                direction = Directions.UP;
-                headRow = head.getRow() - 1;
-                frames = headUp;
-            }
-            case RIGHT -> {
-                direction = Directions.RIGHT;
-                headColumn = head.getColumn() + 1;
-                frames = headRight;
-            }
-            case DOWN -> {
-                direction = Directions.DOWN;
-                headRow = head.getRow() + 1;
-                frames = headDown;
-            }
-            case LEFT -> {
-                direction = Directions.LEFT;
-                headColumn = head.getColumn() - 1;
-                frames = headLeft;
-            }
-        }
-        head.setRow(headRow);
-        head.setColumn(headColumn);
-        headImage.setFrames(frames);
-        if (body.size() > length) {
-            Tile tile = body.remove(0);
-            tile.setType(TileType.EMPTY);
-            tile.setRotation(null);
-            body.get(0).setType(TileType.SNAKE_TAIL);
-        }
-        return field;
-    }
-
-    public int getRow() {
-        return row;
-    }
-
-    public int getColumn() {
-        return column;
-    }
-
-    public Directions getDirection() {
-        return direction;
-    }
-
-    public void setDirection(Directions direction) {
-        this.direction = direction;
-    }
-
-    public void setHead(Tile head) {
-        this.head = head;
-    }
-
-    public Tile getHead() {
-        return head;
-    }
-
-    public ArrayList<Tile> getBody() {
-        return body;
-    }
-
-    public int getLength() {
-        return length;
-    }
-
-    public void grow() {
-        length += 3;
     }
 }
