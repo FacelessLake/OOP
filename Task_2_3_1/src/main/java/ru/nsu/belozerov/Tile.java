@@ -4,22 +4,13 @@ public class Tile {
     private TileType type;
     private int row;
     private int column;
-    private final int size;
     private Directions direction;
     private Directions rotation;
 
-    public Tile(int column, int row, int size) {
-        type = TileType.EMPTY;
-        this.column = column;
-        this.row = row;
-        this.size = size;
-    }
-
-    public Tile(int column, int row, int size, TileType type) {
+    public Tile(int column, int row, TileType type) {
         this.type = type;
         this.column = column;
         this.row = row;
-        this.size = size;
     }
 
     public void setType(TileType type) {
