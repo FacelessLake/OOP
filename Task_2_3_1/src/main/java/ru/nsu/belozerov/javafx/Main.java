@@ -49,7 +49,7 @@ public class Main extends Application {
     @Override
     public void start(Stage theStage) {
         theStage.setTitle("Snake The Game");
-
+        theStage.getIcons().add(new Image("icon.png"));
         canvas1 = new Canvas(WINDOW_WIDTH_PIXELS, WINDOW_HEIGHT_PIXELS);
         canvas2 = new Canvas(WINDOW_WIDTH_PIXELS, WINDOW_HEIGHT_PIXELS);
         Pane root = new Pane();
@@ -191,7 +191,7 @@ public class Main extends Application {
         gc2.setFill(Color.RED);
         gc2.setStroke(Color.BLACK);
         gc2.setLineWidth(1);
-        Font theFont = Font.font("Helvetica", FontWeight.BOLD, 60);
+        Font theFont = Font.font("Forte", FontWeight.BOLD, 60);
         gc2.setFont(theFont);
         String Text = "     GAME OVER";
         gc2.fillText(Text, WINDOW_WIDTH_PIXELS >> 2, WINDOW_HEIGHT_PIXELS >> 2);
@@ -205,7 +205,7 @@ public class Main extends Application {
         gc2.setFill(Color.RED);
         gc2.setStroke(Color.BLACK);
         gc2.setLineWidth(1);
-        Font theFont = Font.font("Helvetica", FontWeight.BOLD, 60);
+        Font theFont = Font.font("Forte", FontWeight.BOLD, 60);
         gc2.setFont(theFont);
         String Text = "     YOU WON";
         gc2.fillText(Text, WINDOW_WIDTH_PIXELS >> 2, WINDOW_HEIGHT_PIXELS >> 2);
