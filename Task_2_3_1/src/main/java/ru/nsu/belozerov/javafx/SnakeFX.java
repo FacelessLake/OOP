@@ -9,6 +9,9 @@ public class SnakeFX {
     private final Image[] headDown = new Image[3];
     private final Image[] headUp = new Image[3];
     private final Image[] headLeft = new Image[3];
+    private final Image[] rotate = new Image[4];
+    private final Image[] tail = new Image[4];
+    private final Image[] body = new Image[2];
     private final int tileSize;
     private AnimatedImage headImage;
     private final Snake snake;
@@ -16,16 +19,23 @@ public class SnakeFX {
     public SnakeFX(int tileSize, Snake snake) {
         this.tileSize = tileSize;
         this.snake = snake;
+        for (int i = 0; i < 3; i++) {
+            headRight[i] = new Image("snake_right" + (i + 1) + ".png", tileSize, tileSize, true, false);
+            headDown[i] = new Image("snake_down" + (i + 1) + ".png", tileSize, tileSize, true, false);
+            headUp[i] = new Image("snake_up" + (i + 1) + ".png", tileSize, tileSize, true, false);
+            headLeft[i] = new Image("snake_left" + (i + 1) + ".png", tileSize, tileSize, true, false);
+        }
+        for (int i = 0; i < 4; i++) {
+            rotate[i] = new Image("rotate-" + (i + 1) + ".png", tileSize, tileSize, true, false);
+            tail[i] = new Image("tail-" + (i + 1) + ".png", tileSize, tileSize, true, false);
+        }
+        body[0] = new Image("body_hor.png", tileSize, tileSize, true, false);
+        body[1] = new Image("body_vert.png", tileSize, tileSize, true, false);
     }
 
     public AnimatedImage makeMainSnake() {
 
-        for (int i = 0; i < 3; i++) {
-            headRight[i] = new Image("snake_right" + (i + 1) + ".png");
-            headDown[i] = new Image("snake_down" + (i + 1) + ".png");
-            headUp[i] = new Image("snake_up" + (i + 1) + ".png");
-            headLeft[i] = new Image("snake_left" + (i + 1) + ".png");
-        }
+
         Directions direction = snake.getDirection();
         double duration = 0.00009;
         int columnBody = snake.getColumn();
@@ -74,50 +84,50 @@ public class SnakeFX {
         }
         headImage.setFrames(frames);
         for (Tile tile : snake.getBody()) {
-            Image bodyImage = new Image("body_hor.png");
+            Image bodyImage = body[0];
             if (tile.getType() == TileType.SNAKE_BODY) {
                 switch (tile.getDirection()) {
                     case UP -> {
-                        bodyImage = new Image("body_vert.png");
+                        bodyImage = body[1];
                         if (tile.getRotation() == Directions.RIGHT) {
-                            bodyImage = new Image("rotate-1.png");
+                            bodyImage = rotate[0];
                         }
                         if (tile.getRotation() == Directions.LEFT) {
-                            bodyImage = new Image("rotate-4.png");
+                            bodyImage = rotate[3];
                         }
                     }
                     case DOWN -> {
-                        bodyImage = new Image("body_vert.png");
+                        bodyImage = body[1];
                         if (tile.getRotation() == Directions.RIGHT) {
-                            bodyImage = new Image("rotate-2.png");
+                            bodyImage = rotate[1];
                         }
                         if (tile.getRotation() == Directions.LEFT) {
-                            bodyImage = new Image("rotate-3.png");
+                            bodyImage = rotate[2];
                         }
                     }
                     case RIGHT -> {
                         if (tile.getRotation() == Directions.UP) {
-                            bodyImage = new Image("rotate-3.png");
+                            bodyImage = rotate[2];
                         }
                         if (tile.getRotation() == Directions.DOWN) {
-                            bodyImage = new Image("rotate-4.png");
+                            bodyImage = rotate[3];
                         }
                     }
                     case LEFT -> {
                         if (tile.getRotation() == Directions.UP) {
-                            bodyImage = new Image("rotate-2.png");
+                            bodyImage = rotate[1];
                         }
                         if (tile.getRotation() == Directions.DOWN) {
-                            bodyImage = new Image("rotate-1.png");
+                            bodyImage = rotate[0];
                         }
                     }
                 }
             } else {
                 switch (tile.getDirection()) {
-                    case UP -> bodyImage = new Image("tail_up.png");
-                    case DOWN -> bodyImage = new Image("tail_down.png");
-                    case RIGHT -> bodyImage = new Image("tail_right.png");
-                    case LEFT -> bodyImage = new Image("tail_left.png");
+                    case UP -> bodyImage = tail[0];
+                    case DOWN -> bodyImage = tail[1];
+                    case RIGHT -> bodyImage = tail[2];
+                    case LEFT -> bodyImage = tail[3];
                 }
             }
             gc.drawImage(bodyImage, tile.getColumn() * tileSize,

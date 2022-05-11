@@ -7,11 +7,12 @@ import java.util.Random;
 
 public class Food {
     private final Field field;
-    private final Image foodImage = new Image("food1.png");
+    private final Image foodImage;
     private final Random random = new Random();
 
-    public Food(Field field) {
+    public Food(Field field, int tileSize) {
         this.field = field;
+        foodImage = new Image("food1.png",tileSize*1.05,tileSize*1.05,true,true);
     }
 
     public Tile createFood() {

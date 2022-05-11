@@ -19,22 +19,22 @@ import ru.nsu.belozerov.*;
 
 
 public class Main extends Application {
-    private final int SQUARE_SIZE = 40;
+    private final int SQUARE_SIZE = 100;
     private final int WINDOW_WIDTH_PIXELS = 1000;
     private final int WINDOW_HEIGHT_PIXELS = 1000;
-    private final int WINDOW_WIDTH_SQUARES = 25;
-    private final int WINDOW_HEIGHT_SQUARES = 25;
+    private final int WINDOW_WIDTH_SQUARES = 10;
+    private final int WINDOW_HEIGHT_SQUARES = 10;
 
     private final Field field = new Field(WINDOW_WIDTH_SQUARES, WINDOW_HEIGHT_SQUARES, SQUARE_SIZE);
     private final Snake snake = new Snake(WINDOW_HEIGHT_SQUARES / 2, WINDOW_WIDTH_SQUARES / 2, Directions.RIGHT, field);
     private final SnakeFX snakeFX = new SnakeFX(SQUARE_SIZE, snake);
-    Tile foodTile;
-    private final Food food = new Food(field);
+    private final Food food = new Food(field, SQUARE_SIZE);
     private boolean foodFlag = false;
 
+    Tile foodTile;
     AnimationTimer timer;
     private String input = "";
-    private final int winCondition = 15;
+    private final int winCondition = 20;
     Integer score = 0;
     Canvas canvas1;
     Canvas canvas2;
@@ -55,23 +55,23 @@ public class Main extends Application {
         Scene theScene = new Scene(root);
         theStage.setScene(theScene);
 
-        theScene.setOnKeyPressed(
-                e -> input = e.getCode().toString());
-
         GraphicsContext gc = canvas1.getGraphicsContext2D();
-
+        AnimatedImage animatedHead = snakeFX.makeMainSnake();
+        snakeFX.drawMainSnake(gc, field);
+        gc.drawImage(animatedHead.getFrame(0), snake.getHead().getColumn() * SQUARE_SIZE,
+                snake.getHead().getRow() * SQUARE_SIZE);
         timer = new AnimationTimer() {
-            int speedUp = 0;
+            int speedDelay = 150;
             Long lastNanoTime = System.nanoTime();
             Directions changeDirection = null;
-            final AnimatedImage animatedHead = snakeFX.makeMainSnake();
 
             public void handle(long currentNanoTime) {
                 try {
-                    Thread.sleep(150 - speedUp);
+                    Thread.sleep(speedDelay);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
+                theScene.setOnKeyPressed(e -> input = e.getCode().toString());
                 foodCheck();
                 paintTheField(gc, Color.web("AAD751"), Color.web("A2D149")); //если вынести - будет мем
                 gc.drawImage(food.getFoodImage(), foodTile.getColumn() * SQUARE_SIZE, foodTile.getRow() * SQUARE_SIZE);
@@ -104,7 +104,7 @@ public class Main extends Application {
                     snake.move(changeDirection);
                 }
                 if (consumeFood()) {
-                    speedUp += 10;
+                    speedDelay -= 100/winCondition;
                 }
 
                 if (bumpInto()) {
@@ -122,15 +122,7 @@ public class Main extends Application {
                 snakeFX.drawMainSnake(gc, field);
                 gc.drawImage(animatedHead.getFrame(elapsedTime), snake.getHead().getColumn() * SQUARE_SIZE,
                         snake.getHead().getRow() * SQUARE_SIZE);
-
-                gc.setFill(Color.WHITE);
-                gc.setStroke(Color.BLACK);
-                gc.setLineWidth(1);
-                Font theFont = Font.font("Helvetica", FontWeight.BOLD, 24);
-                gc.setFont(theFont);
-                String pointsText = "Points: " + score + " / " + winCondition;
-                gc.fillText(pointsText, WINDOW_WIDTH_PIXELS >> 5, SQUARE_SIZE - 10);
-                gc.strokeText(pointsText, WINDOW_WIDTH_PIXELS >> 5, SQUARE_SIZE - 10);
+                printScore(gc);
             }
         };
         timer.start();
@@ -190,9 +182,9 @@ public class Main extends Application {
         gc2.setLineWidth(1);
         Font theFont = Font.font("Snap ITC", FontWeight.BOLD, 60);
         gc2.setFont(theFont);
-        String Text = " GAME OVER";
-        gc2.fillText(Text, WINDOW_WIDTH_PIXELS >> 2, WINDOW_HEIGHT_PIXELS >> 2);
-        gc2.strokeText(Text, WINDOW_WIDTH_PIXELS >> 2, WINDOW_HEIGHT_PIXELS >> 2);
+        String text = " GAME OVER";
+        gc2.fillText(text, WINDOW_WIDTH_PIXELS >> 2, WINDOW_HEIGHT_PIXELS >> 2);
+        gc2.strokeText(text, WINDOW_WIDTH_PIXELS >> 2, WINDOW_HEIGHT_PIXELS >> 2);
         timer.stop();
     }
 
@@ -204,10 +196,19 @@ public class Main extends Application {
         gc2.setLineWidth(1);
         Font theFont = Font.font("Snap ITC", FontWeight.BOLD, 60);
         gc2.setFont(theFont);
-        String Text = " YOU WON";
-        gc2.fillText(Text, WINDOW_WIDTH_PIXELS >> 2, WINDOW_HEIGHT_PIXELS >> 2);
-        gc2.strokeText(Text, WINDOW_WIDTH_PIXELS >> 2, WINDOW_HEIGHT_PIXELS >> 2);
+        String text = "   YOU WON";
+        gc2.fillText(text, WINDOW_WIDTH_PIXELS >> 2, WINDOW_HEIGHT_PIXELS >> 2);
+        gc2.strokeText(text, WINDOW_WIDTH_PIXELS >> 2, WINDOW_HEIGHT_PIXELS >> 2);
         timer.stop();
+    }
+
+    public void printScore(GraphicsContext gc) {
+        gc.setFill(Color.WHITE);
+        gc.setLineWidth(1);
+        Font theFont = Font.font("Helvetica", FontWeight.BOLD, 24);
+        gc.setFont(theFont);
+        String pointsText = "Points: " + score + " / " + winCondition;
+        gc.fillText(pointsText, WINDOW_WIDTH_PIXELS >> 5, WINDOW_WIDTH_PIXELS >> 5);
     }
 
     public static Image[] getImageRow(int frames, int width, int height, String pathFile) {
@@ -233,7 +234,6 @@ public class Main extends Application {
         }
         return img;
     }
-
 
     private void rotate(GraphicsContext gc, double angle, double pivotX, double pivotY) {
         Rotate rotate = new Rotate(angle, pivotX, pivotY);
