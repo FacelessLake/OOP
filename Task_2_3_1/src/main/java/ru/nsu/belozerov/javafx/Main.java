@@ -1,6 +1,7 @@
 package ru.nsu.belozerov.javafx;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -10,7 +11,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -21,11 +21,6 @@ import ru.nsu.belozerov.GameProperties;
 
 
 public class Main extends Application {
-    private int WINDOW_WIDTH_PIXELS;
-    private int WINDOW_HEIGHT_PIXELS;
-    Canvas canvas1;
-    Canvas canvas2;
-    Pane root;
 
     public static void main(String[] args) {
         launch(args);
@@ -33,13 +28,19 @@ public class Main extends Application {
 
     @Override
     public void start(Stage theStage) {
+        startGame(theStage);
+    }
+
+    public static void startGame(Stage theStage) {
         theStage.setTitle("Snake The Game");
         theStage.getIcons().add(new Image("icon.png"));
         GameProperties properties = new GameProperties();
-        GameFX game = new GameFX(properties);
-        WINDOW_WIDTH_PIXELS = properties.getWindowWidthPixels();
-        WINDOW_HEIGHT_PIXELS = properties.getWindowHeightPixels();
-
+        GameFX game = new GameFX(properties, theStage);
+        int WINDOW_WIDTH_PIXELS = properties.getWindowWidthPixels();
+        int WINDOW_HEIGHT_PIXELS = properties.getWindowHeightPixels();
+        Canvas canvas1;
+        Canvas canvas2;
+        Pane root;
         root = new StackPane();
         ObservableList<Node> list = root.getChildren();
         canvas1 = new Canvas(WINDOW_WIDTH_PIXELS, WINDOW_HEIGHT_PIXELS);
@@ -53,12 +54,10 @@ public class Main extends Application {
         game.paintTheField(gc, Color.web("AAD751"), Color.web("A2D149"));
 
         Button startButton = new Button();
-        startButton.setLayoutX(WINDOW_HEIGHT_PIXELS >> 1);
-        startButton.setLayoutY(WINDOW_WIDTH_PIXELS >> 1);
         startButton.setText("Start new game");
         startButton.setOnAction(event -> {
-            list.remove(2,3);
-            game.startGame(theScene, list);
+            list.remove(2, 3);
+            game.newGame(theScene, root);
         });
 
         Button settingsButton = new Button();
@@ -88,11 +87,18 @@ public class Main extends Application {
 
             newWindow.show();
         });
-        VBox vbox = new VBox();
-        vbox.setAlignment(Pos.CENTER);
-        vbox.getChildren().addAll(startButton, settingsButton);
-        vbox.setSpacing(10);
-        list.add(vbox);
+
+        Button quitButton = new Button();
+        quitButton.setText("Quit");
+        quitButton.setOnAction(event -> {
+            Platform.exit();
+        });
+
+        VBox vboxStart = new VBox();
+        vboxStart.setAlignment(Pos.CENTER);
+        vboxStart.getChildren().addAll(startButton, settingsButton, quitButton);
+        vboxStart.setSpacing(10);
+        list.add(vboxStart);
         theStage.setTitle("Snake the Game");
         theStage.setScene(theScene);
         theStage.show();
