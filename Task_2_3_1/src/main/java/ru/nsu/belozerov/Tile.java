@@ -53,8 +53,4 @@ public class Tile {
         return rotation;
     }
 
-    public void setCoordinates(int column, int row) {
-        this.column = column;
-        this.row = row;
-    }
 }
