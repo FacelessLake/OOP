@@ -2,18 +2,24 @@ package ru.nsu.belozerov.javafx;
 
 import javafx.animation.AnimationTimer;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.transform.Rotate;
+import javafx.stage.Stage;
 import ru.nsu.belozerov.*;
 
 public class GameFX {
@@ -24,19 +30,28 @@ public class GameFX {
     private final int WINDOW_HEIGHT_SQUARES;
     private final int winCondition;
     private final int foodCnt;
-    private final Tile[] foodTile;
-    private final Field field;
-    private final Snake snake;
-    private final SnakeFX snakeFX;
-    private final Food food;
+    private Tile[] foodTile;
+    private Field field;
+    private Snake snake;
+    private SnakeFX snakeFX;
+    private Food food;
     private boolean foodFlag = false;
     private boolean winFlag = false;
+    GameProperties properties;
     AnimationTimer timer;
     private String input = "";
     Integer score = 0;
     ObservableList<Node> list;
+    Pane root;
+    Scene theScene;
+    Stage theStage;
+    int speedDelay = 150;
+    Long lastNanoTime = System.nanoTime();
+    Directions changeDirection = null;
 
-    public GameFX(GameProperties properties){
+    public GameFX(GameProperties properties, Stage stage) {
+        this.properties = properties;
+        theStage = stage;
         SQUARE_SIZE = properties.getSquareSize();
         WINDOW_WIDTH_PIXELS = properties.getWindowWidthPixels();
         WINDOW_WIDTH_SQUARES = WINDOW_WIDTH_PIXELS / SQUARE_SIZE;
@@ -51,15 +66,17 @@ public class GameFX {
         foodTile = new Tile[foodCnt];
     }
 
-    public void startGame(Scene theScene, ObservableList<Node> list) {
-        this.list = list;
+    public void newGame(Scene theScene, Pane root) {
+        this.theScene = theScene;
+        this.root = root;
+        list = root.getChildren();
         GraphicsContext gc = ((Canvas) list.get(0)).getGraphicsContext2D();
         AnimatedImage animatedHead = snakeFX.makeMainSnake();
         snakeFX.drawMainSnake(gc, field);
         gc.drawImage(animatedHead.getFrame(0), snake.getHead().getColumn() * SQUARE_SIZE,
                 snake.getHead().getRow() * SQUARE_SIZE);
 
-        for(int i=0; i<foodCnt; i++){
+        for (int i = 0; i < foodCnt; i++) {
             while (true) {
                 foodTile[i] = food.createFood();
                 if (field.getTile(foodTile[i].getColumn(), foodTile[i].getRow()).getType() == TileType.EMPTY) {
@@ -70,9 +87,6 @@ public class GameFX {
         }
 
         timer = new AnimationTimer() {
-            int speedDelay = 150;
-            Long lastNanoTime = System.nanoTime();
-            Directions changeDirection = null;
 
             public void handle(long currentNanoTime) {
                 try {
@@ -214,18 +228,34 @@ public class GameFX {
         gc2.setFont(theFont);
         gc2.fillText(text, WINDOW_WIDTH_PIXELS >> 2, WINDOW_HEIGHT_PIXELS >> 2);
         gc2.strokeText(text, WINDOW_WIDTH_PIXELS >> 2, WINDOW_HEIGHT_PIXELS >> 2);
-        // end();
         timer.stop();
+        end();
     }
 
-//    public void end() {
-//        Button button = new Button();
-//        button.setText("RESTART");
-//        button.setOnAction((ActionEvent event) -> {
-//            startGame(stage);
-//        });
-//        root.getChildren().add(button);
-//    }
+    public void end() {
+        Button restartButton = new Button();
+        restartButton.setText("RESTART");
+        restartButton.setOnAction((ActionEvent event) -> {
+            Canvas canvas = (Canvas) list.get(1);
+            GraphicsContext gc2 = canvas.getGraphicsContext2D();
+            gc2.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+            list.remove(2);
+            GameFX gameFX = new GameFX(properties, theStage);
+            gameFX.newGame(theScene, root);
+        });
+
+        Button menuButton = new Button();
+        menuButton.setText("To the Menu");
+        menuButton.setOnAction((ActionEvent event) -> {
+            Main.startGame(theStage);
+        });
+
+        VBox vboxStart = new VBox();
+        vboxStart.setAlignment(Pos.CENTER);
+        vboxStart.getChildren().addAll(restartButton, menuButton);
+        vboxStart.setSpacing(10);
+        list.add(vboxStart);
+    }
 
     public void printScore(GraphicsContext gc) {
         gc.setFill(Color.WHITE);
