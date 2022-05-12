@@ -32,17 +32,17 @@ public class GameFX {
     private final Food food;
     private boolean foodFlag = false;
     private boolean winFlag = false;
-    GameProperties properties;
-    AnimationTimer timer;
+    private final GameProperties properties;
+    private AnimationTimer timer;
     private String input = "";
-    Integer score = 0;
-    ObservableList<Node> list;
-    Pane root;
-    Scene theScene;
-    Stage theStage;
-    int speedDelay = 150;
-    Long lastNanoTime = System.nanoTime();
-    Directions changeDirection = null;
+    private Integer score = 0;
+    private ObservableList<Node> list;
+    private Pane root;
+    private Scene theScene;
+    private final Stage theStage;
+    private int speedDelay = 150;
+    private Long lastNanoTime = System.nanoTime();
+    private Directions changeDirection = null;
 
     public GameFX(GameProperties properties, Stage stage) {
         this.properties = properties;
@@ -82,7 +82,6 @@ public class GameFX {
         }
 
         timer = new AnimationTimer() {
-
             public void handle(long currentNanoTime) {
                 try {
                     Thread.sleep(speedDelay);
