@@ -234,7 +234,7 @@ public class GameFX {
 
     public void end() {
         Button restartButton = new Button();
-        restartButton.setText("RESTART");
+        restartButton.setText("Restart");
         restartButton.setOnAction((ActionEvent event) -> {
             Canvas canvas = (Canvas) list.get(1);
             GraphicsContext gc2 = canvas.getGraphicsContext2D();
@@ -245,7 +245,7 @@ public class GameFX {
         });
 
         Button menuButton = new Button();
-        menuButton.setText("To the Menu");
+        menuButton.setText("To the menu");
         menuButton.setOnAction((ActionEvent event) -> {
             Main.startGame(theStage);
         });

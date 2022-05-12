@@ -10,6 +10,8 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -21,6 +23,7 @@ import ru.nsu.belozerov.GameProperties;
 
 
 public class Main extends Application {
+    static GameProperties properties;
 
     public static void main(String[] args) {
         launch(args);
@@ -28,13 +31,13 @@ public class Main extends Application {
 
     @Override
     public void start(Stage theStage) {
+        properties = new GameProperties();
         startGame(theStage);
     }
 
     public static void startGame(Stage theStage) {
         theStage.setTitle("Snake The Game");
         theStage.getIcons().add(new Image("icon.png"));
-        GameProperties properties = new GameProperties();
         GameFX game = new GameFX(properties, theStage);
         int WINDOW_WIDTH_PIXELS = properties.getWindowWidthPixels();
         int WINDOW_HEIGHT_PIXELS = properties.getWindowHeightPixels();
@@ -63,15 +66,60 @@ public class Main extends Application {
         Button settingsButton = new Button();
         settingsButton.setText("Settings");
         settingsButton.setOnAction(event -> {
-            Label secondLabel = new Label("I'm a Label on new Window");
+            Stage newWindow = new Stage();
 
+            Label winLabel = new Label("Number of apples to win: ");
+            TextField winTextField = new TextField();
+            winTextField.setText("15");
+
+            Label foodLabel = new Label("Number of apples on the field at the same time: ");
+            Slider foodSlider = new Slider(1, 5, 3);
+            foodSlider.setShowTickMarks(true);
+            foodSlider.setShowTickLabels(true);
+            foodSlider.setBlockIncrement(1);
+            foodSlider.setMajorTickUnit(1);
+            foodSlider.setMinorTickCount(0);
+            foodSlider.setSnapToTicks(true);
+
+            Label squareSizeLabel = new Label("Size of square (in pixels):");
+            TextField squareSizeTextField = new TextField();
+            squareSizeTextField.setText("50");
+
+            Label widthLabel = new Label("Width of the field (in pixels):");
+            TextField widthTextField = new TextField();
+            widthTextField.setText("1000");
+
+            Label heightLabel = new Label("Height of the field (in pixels):");
+            TextField heightTextField = new TextField();
+            heightTextField.setText("1000");
+
+            Button saveButton = new Button();
+            saveButton.setText("Save");
+            saveButton.setOnAction(event2 -> {
+                properties.setWinCondition(Integer.parseInt(winTextField.getText()));
+                properties.setFoodCnt((int) foodSlider.getValue());
+                int height = Integer.parseInt(heightTextField.getText());
+                properties.setWindowHeightPixels(height);
+                int width = Integer.parseInt(widthTextField.getText());
+                properties.setWindowWidthPixels(width);
+                int size = Integer.parseInt(squareSizeTextField.getText());
+                if (size < height & size < width) {
+                    properties.setSquareSize(Integer.parseInt(squareSizeTextField.getText()));
+                }
+                newWindow.close();
+                startGame(theStage);
+            });
+
+            VBox vboxSettings = new VBox();
+            vboxSettings.setAlignment(Pos.TOP_LEFT);
+            vboxSettings.getChildren().addAll(winLabel, winTextField, foodLabel, foodSlider, widthLabel, widthTextField,
+                    heightLabel, heightTextField, squareSizeLabel, squareSizeTextField, saveButton);
+            vboxSettings.setSpacing(10);
             StackPane secondaryLayout = new StackPane();
-            secondaryLayout.getChildren().add(secondLabel);
-
-            Scene secondScene = new Scene(secondaryLayout, 230, 100);
+            secondaryLayout.getChildren().add(vboxSettings);
+            Scene secondScene = new Scene(secondaryLayout);
 
             // New window (Stage)
-            Stage newWindow = new Stage();
             newWindow.setTitle("Settings");
             newWindow.setScene(secondScene);
 
