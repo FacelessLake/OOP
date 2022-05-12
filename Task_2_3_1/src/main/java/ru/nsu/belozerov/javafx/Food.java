@@ -12,7 +12,7 @@ public class Food {
 
     public Food(Field field, int tileSize) {
         this.field = field;
-        foodImage = new Image("food1.png",tileSize*1.05,tileSize*1.05,true,true);
+        foodImage = new Image("food1.png", tileSize, tileSize, true, true);
     }
 
     public Tile createFood() {

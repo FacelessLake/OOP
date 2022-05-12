@@ -1,7 +1,6 @@
 package ru.nsu.belozerov.javafx;
 
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -20,6 +19,8 @@ import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import ru.nsu.belozerov.GameProperties;
+
+import static javafx.application.Platform.exit;
 
 
 public class Main extends Application {
@@ -138,9 +139,7 @@ public class Main extends Application {
 
         Button quitButton = new Button();
         quitButton.setText("Quit");
-        quitButton.setOnAction(event -> {
-            Platform.exit();
-        });
+        quitButton.setOnAction(event -> exit());
 
         VBox vboxStart = new VBox();
         vboxStart.setAlignment(Pos.CENTER);

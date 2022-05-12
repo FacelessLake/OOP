@@ -9,16 +9,11 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
-import javafx.scene.image.Image;
-import javafx.scene.image.PixelReader;
-import javafx.scene.image.PixelWriter;
-import javafx.scene.image.WritableImage;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import ru.nsu.belozerov.*;
 
@@ -30,11 +25,11 @@ public class GameFX {
     private final int WINDOW_HEIGHT_SQUARES;
     private final int winCondition;
     private final int foodCnt;
-    private Tile[] foodTile;
-    private Field field;
-    private Snake snake;
-    private SnakeFX snakeFX;
-    private Food food;
+    private final Tile[] foodTile;
+    private final Field field;
+    private final Snake snake;
+    private final SnakeFX snakeFX;
+    private final Food food;
     private boolean foodFlag = false;
     private boolean winFlag = false;
     GameProperties properties;
@@ -224,7 +219,7 @@ public class GameFX {
         gc2.setFill(Color.RED);
         gc2.setStroke(Color.BLACK);
         gc2.setLineWidth(1);
-        Font theFont = Font.font("Snap ITC", FontWeight.BOLD, 60);
+        Font theFont = Font.font("Snap ITC", FontWeight.BOLD, 0.06 * WINDOW_HEIGHT_PIXELS);
         gc2.setFont(theFont);
         gc2.fillText(text, WINDOW_WIDTH_PIXELS >> 2, WINDOW_HEIGHT_PIXELS >> 2);
         gc2.strokeText(text, WINDOW_WIDTH_PIXELS >> 2, WINDOW_HEIGHT_PIXELS >> 2);
@@ -246,9 +241,7 @@ public class GameFX {
 
         Button menuButton = new Button();
         menuButton.setText("To the menu");
-        menuButton.setOnAction((ActionEvent event) -> {
-            Main.startGame(theStage);
-        });
+        menuButton.setOnAction((ActionEvent event) -> Main.startGame(theStage));
 
         VBox vboxStart = new VBox();
         vboxStart.setAlignment(Pos.CENTER);
@@ -260,38 +253,9 @@ public class GameFX {
     public void printScore(GraphicsContext gc) {
         gc.setFill(Color.WHITE);
         gc.setLineWidth(1);
-        Font theFont = Font.font("Helvetica", FontWeight.BOLD, 24);
+        Font theFont = Font.font("Helvetica", FontWeight.BOLD, 0.035 * WINDOW_HEIGHT_PIXELS);
         gc.setFont(theFont);
         String pointsText = "Points: " + score + " / " + winCondition;
         gc.fillText(pointsText, WINDOW_WIDTH_PIXELS >> 5, WINDOW_WIDTH_PIXELS >> 5);
-    }
-
-    public static Image[] getImageRow(int frames, int width, int height, String pathFile) {
-        Image[] img = new Image[frames];
-        Image stripImg = new Image(pathFile);
-        PixelReader pr = stripImg.getPixelReader();
-        PixelWriter pw;
-
-        for (int i = 0; i < frames; i++) {
-            WritableImage wImg = new WritableImage(width, height);
-            pw = wImg.getPixelWriter();
-
-            for (int readX = 0; readX < width; readX++) {
-
-                int ww = (height * i);
-                for (int readY = ww; readY < ww + height; readY++) {
-                    Color color = pr.getColor(readX, readY);
-                    pw.setColor(readX, readY - ww, color);
-
-                }
-            }
-            img[i] = wImg;
-        }
-        return img;
-    }
-
-    private void rotate(GraphicsContext gc, double angle, double pivotX, double pivotY) {
-        Rotate rotate = new Rotate(angle, pivotX, pivotY);
-        gc.setTransform(rotate.getMxx(), rotate.getMyx(), rotate.getMxy(), rotate.getMyy(), rotate.getTx(), rotate.getTy());
     }
 }

@@ -7,7 +7,7 @@ public class GameProperties {
     private int windowWidthPixels;
     private int windowHeightPixels;
 
-    public GameProperties(){
+    public GameProperties() {
         winCondition = 15;
         foodCnt = 3;
         squareSize = 50;
