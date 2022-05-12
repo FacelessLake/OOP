@@ -112,7 +112,8 @@ public class Main extends Application {
             });
 
             VBox vboxSettings = new VBox();
-            vboxSettings.setAlignment(Pos.TOP_LEFT);
+            vboxSettings.setAlignment(Pos.CENTER);
+            vboxSettings.setSpacing(10);
             vboxSettings.getChildren().addAll(winLabel, winTextField, foodLabel, foodSlider, widthLabel, widthTextField,
                     heightLabel, heightTextField, squareSizeLabel, squareSizeTextField, saveButton);
             vboxSettings.setSpacing(10);
@@ -123,17 +124,10 @@ public class Main extends Application {
             // New window (Stage)
             newWindow.setTitle("Settings");
             newWindow.setScene(secondScene);
-
-            // Specifies the modality for new window.
             newWindow.initModality(Modality.WINDOW_MODAL);
-
-            // Specifies the owner Window (parent) for new window
             newWindow.initOwner(theStage);
-
-            // Set position of second window, related to primary window.
             newWindow.setX(theStage.getX());
             newWindow.setY(theStage.getY());
-
             newWindow.show();
         });
 
